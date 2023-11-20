@@ -1,0 +1,70 @@
+name: shop_app
+description: Your every day shop app!
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.1.3 <4.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  #cupertino_icons
+  cupertino_icons: ^1.0.2
+
+  #expandaple_text
+  expandable_text: ^2.3.0
+
+  #flutter_screenutil
+  flutter_screenutil: ^5.9.0
+
+  #dio
+  dio: ^5.3.3
+
+  #sqflite
+  sqflite: ^2.3.0
+
+  #path_for_sqflite
+  path: ^1.8.3
+
+  #lottie animation
+  lottie: ^2.7.0
+
+  #cached_network_image
+  cached_network_image: ^3.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+
+  uses-material-design: true
+
+
+  assets:
+    - assets/icons/
+    - assets/icons/tabbar/
+    - assets/icons/light/
+    - assets/icons/bold/
+    - assets/icons/home/
+    - assets/icons/profile/
+    - assets/icons/detail/
+    - assets/icons/categories/
+    - assets/lotties/
+
+
+  fonts:
+    - family: Urbanist
+      fonts:
+        - asset: assets/fonts/Urbanist-Regular.ttf
+        - asset: assets/fonts/Urbanist-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Urbanist-Bold.ttf
+          weight: 700
