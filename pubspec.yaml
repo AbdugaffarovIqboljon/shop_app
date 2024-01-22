@@ -31,7 +31,7 @@ dependencies:
   #path_for_sqflite
   path: ^1.8.3
 
-  #lottie animation
+  #lottie_animation
   lottie: ^2.7.0
 
   #cached_network_image
@@ -39,6 +39,9 @@ dependencies:
 
   #provider
   provider: ^6.1.1
+
+  #Skeleton_animation
+  skeletonizer: ^1.0.1
 
 dev_dependencies:
   flutter_test:

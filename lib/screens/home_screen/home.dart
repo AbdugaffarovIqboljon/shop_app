@@ -3,10 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/data/network_service.dart';
 import 'package:shop_app/model/product_model.dart';
 import 'package:shop_app/screens/home_screen/home_screen_views/special_offer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../components/product_card.dart';
+import '../../model/category.dart';
 import '../product_detail_screen/detail_screen.dart';
-import '../special_offers_screen/special_offers_screen.dart';
 import 'home_screen_views/by_categories_header.dart';
 import 'home_screen_views/by_categories_widget.dart';
 import 'home_screen_views/home_app_bar.dart';
@@ -28,13 +29,30 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    fetchData();
+    fetchAllData();
   }
 
-  Future<void> fetchData() async {
+  Future<void> fetchAllData() async {
     try {
       List<ProductModel> fetchedProducts =
           await productService.methodGetAllProducts();
+      setState(() {
+        productList = fetchedProducts;
+      });
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
+  Future<void> fetchProductsByCategory(String category) async {
+    try {
+      setState(() {
+        productList = [];
+      });
+
+      List<ProductModel> fetchedProducts =
+          await productService.methodGetProductsByCategory(category: category);
+
       setState(() {
         productList = fetchedProducts;
       });
@@ -54,10 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _onTapSpecialOffersSeeAll(BuildContext context) {
-    Navigator.pushNamed(context, SpecialOfferScreen.route());
-  }
-
   @override
   Widget build(BuildContext context) {
     const borderRadius = BorderRadius.all(Radius.circular(20));
@@ -73,19 +87,37 @@ class _HomeScreenState extends State<HomeScreen> {
             sliver: SliverList(
               delegate: SliverChildListDelegate(
                 [
+                  /// #TextField
                   const SearchField(),
+
                   const SizedBox(height: 15),
-                  SpecialOffers(
-                    onTapSeeAll: () => _onTapSpecialOffersSeeAll(context),
-                  ),
+
+                  /// #Header Special Offers
+                  const SpecialOffers(),
+
                   const SizedBox(height: 25),
+
+                  /// #Categories Header Title
                   const ByCategoriesTitle(),
+
                   const SizedBox(height: 15),
-                  const ByCategoriesWidget(),
+
+                  /// #Categories Sub Widgets
+                  ByCategoriesWidget(
+                    onCategorySelected: (index) {
+                      if (index == 0) {
+                        fetchAllData();
+                      } else {
+                        fetchProductsByCategory(homeCategories[index].id);
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
           ),
+
+          /// #Product SliverGrid
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             sliver: SliverGrid(
@@ -97,16 +129,20 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  final product = productList[index];
-                  return ProductCard(
-                    borderRadius: borderRadius,
-                    product: product,
-                    onTap: () {
-                      navigateToShopDetailScreen(product.id);
-                    },
-                  );
+                  if (productList.isEmpty) {
+                    return buildSkeletonProductCard();
+                  } else {
+                    final product = productList[index];
+                    return ProductCard(
+                      borderRadius: borderRadius,
+                      product: product,
+                      onTap: () {
+                        navigateToShopDetailScreen(product.id);
+                      },
+                    );
+                  }
                 },
-                childCount: productList.length,
+                childCount: productList.isEmpty ? 6 : productList.length,
               ),
             ),
           ),
@@ -114,4 +150,47 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
+
+Widget buildSkeletonProductCard() {
+  return Skeletonizer(
+    enabled: true,
+    ignorePointers: false,
+    child: Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 150,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Container(
+            height: 20,
+            width: double.infinity,
+            color: Colors.grey.shade300,
+          ),
+          const SizedBox(height: 5),
+          Container(
+            height: 20,
+            width: 100,
+            color: Colors.grey.shade300,
+          ),
+          const SizedBox(height: 10),
+          Container(
+            height: 20,
+            width: double.infinity,
+            color: Colors.grey.shade300,
+          ),
+        ],
+      ),
+    ),
+  );
 }

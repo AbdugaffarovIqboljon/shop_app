@@ -13,14 +13,14 @@ final homeCategories = <Category>[
     'all',
   ),
   const Category(
-    'assets/icons/categories/ic_shirt.png',
-    "Clothing",
-    "men's clothing",
-  ),
-  const Category(
     'assets/icons/categories/ic_jewelry.png',
     "Jewelery",
     "jewelery",
+  ),
+  const Category(
+    'assets/icons/categories/ic_shirt.png',
+    "Clothing",
+    "men's clothing",
   ),
   const Category(
     'assets/icons/categories/ic_gadgets.png',

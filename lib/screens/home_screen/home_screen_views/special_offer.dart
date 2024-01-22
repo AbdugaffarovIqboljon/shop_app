@@ -10,9 +10,9 @@ import '../../../model/product_model.dart';
 typedef SpecialOffersOnTapSeeAll = void Function();
 
 class SpecialOffers extends StatefulWidget {
-  final SpecialOffersOnTapSeeAll? onTapSeeAll;
 
-  const SpecialOffers({super.key, this.onTapSeeAll});
+
+  const SpecialOffers({super.key});
 
   @override
   State<SpecialOffers> createState() => _SpecialOffersState();
@@ -117,7 +117,7 @@ class _SpecialOffersState extends State<SpecialOffers> {
           ),
         ),
         TextButton(
-          onPressed: () => widget.onTapSeeAll?.call(),
+          onPressed: navigateToSpecialOfferScreen,
           child: const Text(
             'See All',
             style: TextStyle(

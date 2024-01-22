@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart' as provider;
 import 'package:shop_app/model/cart_model.dart';
 import 'package:shop_app/model/product_model.dart';
 import 'package:shop_app/screens/cart_screen/cart_screen_views/alert_dialog.dart';
@@ -20,6 +19,7 @@ class _CartScreenState extends State<CartScreen> {
   List<ProductModel> selectedProducts = [];
   ProductDatabase productDatabase = ProductDatabase();
   ProductService productService = ProductService();
+  bool isListTileTapped = false;
 
   void toggleProductSelection(ProductModel product) {
     setState(() {
@@ -59,19 +59,19 @@ class _CartScreenState extends State<CartScreen> {
           } else {
             List<ProductModel> products = snapshot.data!;
             return ListView.builder(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
               itemCount: products.length,
               itemBuilder: (context, index) {
                 final product = products[index];
                 final cartItem = cartItems.firstWhere(
                   (item) => item.product.id == product.id,
-                  orElse: () => CartItem(id: -1, product: product),
+                  orElse: () => CartItem(id: 1, product: product),
                 );
 
                 final isSelected = selectedProducts.contains(product);
 
                 return SizedBox(
-                  height: 120.sp,
+                  height: 130.sp,
                   width: double.infinity,
                   child: Card(
                     shape: RoundedRectangleBorder(
@@ -129,7 +129,7 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                         ],
                       ),
-                      tileColor: Colors.transparent,
+                      tileColor: isSelected ? Colors.grey.shade100 : Colors.transparent,
                     ),
                   ),
                 );
