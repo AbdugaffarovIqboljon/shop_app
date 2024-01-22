@@ -5,7 +5,7 @@ class ProductModel {
   final String description;
   final String category;
   final String image;
-  final Rating rating;
+  late final Rating rating;
 
   ProductModel({
     required this.id,
@@ -18,7 +18,7 @@ class ProductModel {
   });
 
   @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       other is ProductModel &&
           runtimeType == other.runtimeType &&
@@ -31,7 +31,20 @@ class ProductModel {
           rating == other.rating;
 
   @override
-  int get hashCode => Object.hash(id, title,  category, rating);
+  int get hashCode => Object.hash(id, title, category, rating);
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'price': price,
+      'description': description,
+      'category': category,
+      'image': image,
+      'rate': rating.rate,
+      'count': rating.count,
+    };
+  }
 
   factory ProductModel.fromJson(Map<String, Object?> json) => ProductModel(
         id: json["id"] as int,

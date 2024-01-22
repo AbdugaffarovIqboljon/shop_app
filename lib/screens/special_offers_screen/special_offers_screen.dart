@@ -1,14 +1,12 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/components/app_bar.dart';
 import 'package:shop_app/components/special_offer_widget.dart';
+import 'package:shop_app/data/network_service.dart';
 
-import '../../core/params/apis.dart';
-import '../../core/params/service_locator.dart';
 import '../../model/product_model.dart';
 import '../../model/special_offer.dart';
+import '../product_detail_screen/detail_screen.dart';
 
 class SpecialOfferScreen extends StatefulWidget {
   const SpecialOfferScreen({super.key});
@@ -21,22 +19,24 @@ class SpecialOfferScreen extends StatefulWidget {
 
 class _SpecialOfferScreenState extends State<SpecialOfferScreen> {
   late final List<SpecialOffer> datas = homeSpecialOffers;
-  late List<ProductModel> _products = [];
+  final NetworkService productService = NetworkService();
+  List<ProductModel> productList = [];
 
   @override
   void initState() {
     super.initState();
-    fetchProducts();
+    fetchData();
   }
 
-  Future<void> fetchProducts() async {
+  Future<void> fetchData() async {
     try {
-      _products = await repository.methodGetAllProducts(
-        api: Api.apiGETProducts,
-      );
-      setState(() {});
+      List<ProductModel> fetchedProducts =
+          await productService.methodGetAllProducts();
+      setState(() {
+        productList = fetchedProducts;
+      });
     } catch (e) {
-      print('Error fetching products: $e');
+      print('Error fetching data: $e');
     }
   }
 
@@ -51,24 +51,34 @@ class _SpecialOfferScreenState extends State<SpecialOfferScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 35),
         itemBuilder: (context, index) {
           final data = datas[index];
-          final product = _products[index];
-          return Container(
-            height: 180.sp,
+          final product = productList[index];
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ShopDetailScreen(productId: product.id),
+                ),
+              );
+            },
+            child: Container(
+              height: 180.sp,
               padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFFFFF),
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: const BorderRadius.all(Radius.circular(25)),
-            ),
-            child: SpecialOfferWidget(
-              context,
-              data: data,
-              index: index,
-              productModel: product,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFFFFF),
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: const BorderRadius.all(Radius.circular(25)),
+              ),
+              child: SpecialOfferWidget(
+                context,
+                data: data,
+                index: index,
+                productModel: product,
+              ),
             ),
           );
         },
-        itemCount: _products.length ~/ 4,
+        itemCount: productList.length ~/ 4,
         separatorBuilder: (BuildContext context, int index) {
           return const SizedBox(height: 20);
         },

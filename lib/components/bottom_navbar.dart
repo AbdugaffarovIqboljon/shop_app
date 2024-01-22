@@ -16,53 +16,53 @@ class BottomNavBar extends StatelessWidget {
     final List<BottomNavigationBarItem> items = [
       BottomNavigationBarItem(
         icon: Image(
-          image: const AssetImage('assets/icons/tabbar/house-chimney.png'),
-          height: 19.sp,
-          width: 19.sp,
+          image: const AssetImage('assets/icons/tabbar/ic_house_chimney.png'),
+          height: 21.sp,
+          width: 21.sp,
         ),
         activeIcon: Image(
-          image: const AssetImage('assets/icons/tabbar/house-chimney (1).png'),
-          height: 19.sp,
-          width: 19.sp,
+          image: const AssetImage('assets/icons/tabbar/ic_house_chimney_fill.png'),
+          height: 21.sp,
+          width: 21.sp,
         ),
         label: 'Home',
       ),
       BottomNavigationBarItem(
         icon: Image(
           image: const AssetImage('assets/icons/tabbar/shopping-cart.png'),
-          height: 19.sp,
-          width: 19.sp,
+          height: 22.sp,
+          width: 22.sp,
         ),
         activeIcon: Image(
-          image: const AssetImage('assets/icons/tabbar/shopping-cart (1).png'),
-          height: 19.sp,
-          width: 19.sp,
+          image: const AssetImage('assets/icons/tabbar/ic_cart_shopping_fast_fill.png'),
+          height: 22.sp,
+          width: 22.sp,
         ),
         label: 'Cart',
       ),
       BottomNavigationBarItem(
         icon: Image(
-          image: const AssetImage('assets/icons/tabbar/truck-side.png'),
-          height: 19.sp,
-          width: 19.sp,
+          image: const AssetImage('assets/icons/tabbar/ic_box.png'),
+          height: 18.sp,
+          width: 18.sp,
         ),
         activeIcon: Image(
-          image: const AssetImage('assets/icons/tabbar/truck-side (1).png'),
-          height: 19.sp,
-          width: 19.sp,
+          image: const AssetImage('assets/icons/tabbar/ic_box_fill.png'),
+          height: 18.sp,
+          width: 18.sp,
         ),
         label: 'Orders',
       ),
       BottomNavigationBarItem(
         icon: Image(
-          image: const AssetImage('assets/icons/tabbar/user.png'),
-          height: 19.sp,
-          width: 19.sp,
+          image: const AssetImage('assets/icons/tabbar/ic_user.png'),
+          height: 21.sp,
+          width: 21.sp,
         ),
         activeIcon: Image(
-          image: const AssetImage('assets/icons/tabbar/user (1).png'),
-          height: 19.sp,
-          width: 19.sp,
+          image: const AssetImage('assets/icons/tabbar/ic_user_fill.png'),
+          height: 21.sp,
+          width: 21.sp,
         ),
         label: 'Profile',
       ),
@@ -77,14 +77,14 @@ class BottomNavBar extends StatelessWidget {
       items: items,
       selectedLabelStyle: const TextStyle(
         fontWeight: FontWeight.bold,
-        fontSize: 10,
+        fontSize: 13,
       ),
       showUnselectedLabels: true,
       unselectedLabelStyle: const TextStyle(
-        fontWeight: FontWeight.normal,
-        fontSize: 10,
+        fontWeight: FontWeight.w500,
+        fontSize: 12,
       ),
-      selectedItemColor: Colors.deepPurpleAccent,
+      // selectedItemColor: Colors.deepPurpleAccent,
       unselectedItemColor: const Color(0xFF9E9E9E),
     );
   }

@@ -1,11 +1,22 @@
-import 'package:expandable_text/expandable_text.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/screens/product_detail_screen/product_detail_screen_views/add_to_cart_button.dart';
+import 'package:shop_app/screens/product_detail_screen/product_detail_screen_views/added_to_cart_dialog.dart';
+import 'package:shop_app/screens/product_detail_screen/product_detail_screen_views/build_tile.dart';
+import 'package:shop_app/screens/product_detail_screen/product_detail_screen_views/product_description.dart';
+import 'package:shop_app/services/cart_service/add_to_cart_service.dart';
+
+import '../../data/network_service.dart';
+import '../../model/product_model.dart';
+import '../../model/special_offer.dart';
+import '../../services/product_service.dart';
 
 class ShopDetailScreen extends StatefulWidget {
-  const ShopDetailScreen({super.key});
+  final int productId;
 
-  static String route() => '/shop_detail';
+  const ShopDetailScreen({super.key, required this.productId});
 
   @override
   State<ShopDetailScreen> createState() => _ShopDetailScreenState();
@@ -13,144 +24,136 @@ class ShopDetailScreen extends StatefulWidget {
 
 class _ShopDetailScreenState extends State<ShopDetailScreen> {
   int _quantity = 0;
+  late final List<SpecialOffer> datas = homeSpecialOffers;
+  final NetworkService productService = NetworkService();
+  List<ProductModel> productList = [];
   bool _isCollected = false;
+  late double totalPrice;
+
+  Future<void> saveProductToSqflite(ProductModel product, int quantity) async {
+    final database = ProductDatabase();
+
+    await database.open();
+    bool containsProduct = await database.containsProduct(product.id);
+
+    if (containsProduct) {
+      await database.updateProductQuantity(
+        productId: product.id,
+        quantity: quantity,
+      );
+    } else {
+      await database.insertProduct(product);
+      await database.updateProductQuantity(
+        productId: product.id,
+        quantity: quantity,
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    totalPrice = 0;
+    _loadProductDetails();
+  }
+
+  Future<void> _loadProductDetails() async {
+    try {
+      final ProductModel product = await productService.methodGetProductById(
+        productId: widget.productId,
+      );
+
+      setState(() {
+        productList.add(product);
+      });
+    } catch (e) {
+      print('Error fetching product details: $e');
+    }
+  }
+
+  void addToCart(ProductModel product) {
+    MyProvider.of(context).addToCart(
+      product: product,
+      quantity: _quantity,
+    );
+
+    saveProductToSqflite(product, _quantity);
+
+    totalPrice > 0 ? showDelayedDialog(context) : null;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                backgroundColor: Colors.white,
-                pinned: true,
-                expandedHeight: 280.sp,
-                leading: IconButton(
-                  icon: Image.asset('assets/icons/back@2x.png', scale: 2),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Container(
-                    color: const Color(0xFFeeeeee),
-                    child: Image.asset(
-                      'assets/icons/products/detail_sofa.png',
-                      fit: BoxFit.none,
+          SizedBox(
+            height: 950.sp,
+            child: ListView.builder(
+              itemCount: productList.length,
+              shrinkWrap: true,
+              primary: false,
+              itemBuilder: (context, index) {
+                final product = productList[index];
+                return Column(
+                  children: [
+                    Align(
+                      alignment: Alignment(0.95.sp, 0),
+                      child: IconButton(
+                        onPressed: () =>
+                            setState(() => _isCollected = !_isCollected),
+                        icon: Image.asset(
+                          'assets/icons/${_isCollected ? 'bold' : 'light'}/heart@2x.png',
+                          height: 35.sp,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ..._buildTitle(),
-                      const SizedBox(height: 16),
-                      const Divider(color: Color(0xFFEEEEEE)),
-                      const SizedBox(height: 16),
-                      ..._buildDescription(),
-                      const SizedBox(height: 24),
-                      _buildQuantity(),
-                      const SizedBox(height: 115),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+                    Image(
+                      height: 300.sp,
+                      width: 350.sp,
+                      image: NetworkImage(product.image),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 16,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ...buildTitle(
+                            product.title,
+                            product.rating.rate,
+                            product.rating.count,
+                            product.price,
+                          ),
+                          const SizedBox(height: 15),
+                          const Divider(color: Color(0xFFEEEEEE)),
+                          const SizedBox(height: 15),
+                          ...buildDescription(product.description),
+                          SizedBox(height: 25.sp),
+                          _buildQuantity(product),
+                          SizedBox(height: 125.sp),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
-          _addToCartButton()
+
+          /// #Add to Cart Button
+          addToCartButton(
+            totalPrice,
+            () => addToCart(productList.first),
+          ),
         ],
       ),
     );
   }
 
-  List<Widget> _buildTitle() {
-    return <Widget>[
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const FittedBox(
-            child: Text(
-              'Mid Century Sofa',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
-            ),
-          ),
-          IconButton(
-            onPressed: () => setState(() => _isCollected = !_isCollected),
-            icon: Image.asset(
-              'assets/icons/${_isCollected ? 'bold' : 'light'}/heart@2x.png',
-              height: 35.sp,
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 12),
-      Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(6)),
-              color: Color(0xFFEEEEEE),
-            ),
-            child: Text(
-              '9,742 sold',
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          const Icon(Icons.star_rate, color: Colors.orange),
-          const SizedBox(width: 8),
-          Text(
-            '4.8 (6,573 reviews)',
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    ];
-  }
-
-  List<Widget> _buildDescription() {
-    return [
-      const Text(
-        'Description',
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      const SizedBox(height: 8),
-      const ExpandableText(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et Lorem ipsum dolor sit amet',
-        expandText: 'view more',
-        collapseText: 'view less',
-        textAlign: TextAlign.start,
-        maxLines: 6,
-        animation: true,
-        animationCurve: ElasticInOutCurve(),
-        style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
-        ),
-        linkStyle: TextStyle(
-          fontSize: 16,
-          color: Color(0xFF424242),
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ];
-  }
-
-  Widget _buildQuantity() {
+  Widget _buildQuantity(ProductModel product) {
     return Row(
       children: [
         const Text(
@@ -172,113 +175,40 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
             child: Row(
               children: [
                 InkWell(
-                  child:
-                      Image.asset('assets/icons/detail/minus@2x.png', scale: 2),
+                  child: Image.asset(
+                    'assets/icons/detail/minus@2x.png',
+                    scale: 2,
+                  ),
                   onTap: () {
                     if (_quantity <= 0) return;
                     setState(() => _quantity -= 1);
+                    totalPrice > 0 ? totalPrice -= product.price : 0;
                   },
                 ),
                 const SizedBox(width: 20),
-                Text('$_quantity',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    )),
+                Text(
+                  '$_quantity',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
                 const SizedBox(width: 20),
                 InkWell(
-                  child:
-                      Image.asset('assets/icons/detail/plus@2x.png', scale: 2),
-                  onTap: () => setState(() => _quantity += 1),
+                  child: Image.asset(
+                    'assets/icons/detail/plus@2x.png',
+                    scale: 2,
+                  ),
+                  onTap: () {
+                    setState(() => _quantity += 1);
+                    totalPrice += product.price;
+                  },
                 ),
               ],
             ),
           ),
         ),
       ],
-    );
-  }
-
-  Widget _addToCartButton() {
-    buildAddCard() => Container(
-          height: 58.sp,
-          width: 160.sp,
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(29)),
-            color: const Color(0xFF101010),
-            boxShadow: [
-              BoxShadow(
-                offset: const Offset(4, 8),
-                blurRadius: 20,
-                color: const Color(0xFF101010).withOpacity(0.25),
-              ),
-            ],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: const BorderRadius.all(Radius.circular(29)),
-              onTap: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset('assets/icons/detail/bag@2x.png', scale: 2),
-                  const SizedBox(width: 16),
-                  const Text(
-                    'Add to Cart',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 22),
-        child: Column(
-          children: [
-            const Divider(color: Color(0xFFEEEEEE)),
-            const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Total price',
-                      style: TextStyle(
-                        color: const Color(0xFF757575),
-                        fontSize: 13.sp,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      '\$280.00',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24.sp,
-                      ),
-                    ),
-                  ],
-                ),
-                buildAddCard()
-              ],
-            ),
-            const SizedBox(height: 36),
-          ],
-        ),
-      ),
     );
   }
 }

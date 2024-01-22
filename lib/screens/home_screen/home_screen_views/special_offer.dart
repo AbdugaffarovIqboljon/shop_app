@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/model/category.dart';
+import 'package:shop_app/data/network_service.dart';
 import 'package:shop_app/model/special_offer.dart';
+import 'package:shop_app/screens/special_offers_screen/special_offers_screen.dart';
 
 import '../../../components/special_offer_widget.dart';
-import '../../../core/params/apis.dart';
-import '../../../core/params/service_locator.dart';
 import '../../../model/product_model.dart';
 
 typedef SpecialOffersOnTapSeeAll = void Function();
@@ -21,23 +20,33 @@ class SpecialOffers extends StatefulWidget {
 
 class _SpecialOffersState extends State<SpecialOffers> {
   late final List<SpecialOffer> specials = homeSpecialOffers;
-  late List<ProductModel> _products = [];
   int selectIndex = 0;
+
+  final NetworkService productService = NetworkService();
+  List<ProductModel> productList = [];
 
   @override
   void initState() {
     super.initState();
-    fetchProducts();
+    fetchData();
   }
 
-  Future<void> fetchProducts() async {
+  void navigateToSpecialOfferScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SpecialOfferScreen()),
+    );
+  }
+
+  Future<void> fetchData() async {
     try {
-      _products = await repository.methodGetAllProducts(
-        api: Api.apiGETProducts,
-      );
-      setState(() {});
+      List<ProductModel> fetchedProducts =
+          await productService.methodGetAllProducts();
+      setState(() {
+        productList = fetchedProducts;
+      });
     } catch (e) {
-      print('Error fetching products: $e');
+      print('Error fetching data: $e');
     }
   }
 
@@ -46,43 +55,45 @@ class _SpecialOffersState extends State<SpecialOffers> {
     return Column(
       children: [
         _buildTitle(),
-        const SizedBox(height: 24),
+        const SizedBox(height: 10),
         Stack(
           children: [
-            Container(
-              clipBehavior: Clip.antiAlias,
-              height: 200.sp,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(20),
-                ),
-                border: Border.all(color: Colors.grey.shade300),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.deepPurple.shade100,
-                    offset: Offset(0, 1),
-                    blurRadius: 0.8,
-                    spreadRadius: 0.8,
+            InkWell(
+              onTap: navigateToSpecialOfferScreen,
+              child: Container(
+                clipBehavior: Clip.antiAlias,
+                height: 200.sp,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20),
                   ),
-                ],
-              ),
-              child: PageView.builder(
-                itemBuilder: (context, index) {
-                  final data = specials[index];
-                  final product = _products[index];
-                  return SpecialOfferWidget(
-                    context,
-                    data: data,
-                    index: index,
-                    productModel: product,
-                  );
-                },
-                itemCount: _products.length ~/ 4,
-                allowImplicitScrolling: true,
-                onPageChanged: (value) {
-                  setState(() => selectIndex = value);
-                },
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      offset: Offset(0, 0),
+                      blurRadius: 0.5,
+                      spreadRadius: 0.5,
+                    ),
+                  ],
+                ),
+                child: PageView.builder(
+                  itemBuilder: (context, index) {
+                    final data = specials[index];
+                    final product = productList[index];
+                    return SpecialOfferWidget(
+                      context,
+                      data: data,
+                      index: index,
+                      productModel: product,
+                    );
+                  },
+                  itemCount: productList.length ~/ 4,
+                  allowImplicitScrolling: true,
+                  onPageChanged: (value) {
+                    setState(() => selectIndex = value);
+                  },
+                ),
               ),
             ),
             _buildPageIndicator()
@@ -122,7 +133,7 @@ class _SpecialOffersState extends State<SpecialOffers> {
 
   Widget _buildPageIndicator() {
     List<Widget> list = [];
-    for (int i = 0; i < _products.length ~/ 4; i++) {
+    for (int i = 0; i < productList.length ~/ 4; i++) {
       list.add(i == selectIndex ? _indicator(true) : _indicator(false));
     }
     return Container(

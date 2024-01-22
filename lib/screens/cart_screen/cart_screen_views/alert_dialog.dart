@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shop_app/model/product_model.dart';
-import 'package:shop_app/services/orders_manager/orders_manager.dart';
 
 void showAlertDialog(
-    BuildContext context, ProductModel product, OrdersManager ordersManager) {
+  BuildContext context,
+) {
   showDialog(
     context: context,
     barrierDismissible: true,
@@ -29,7 +28,6 @@ void showAlertDialog(
         actions: [
           TextButton(
             onPressed: () {
-              ordersManager.addToOrders(product);
               Navigator.of(context).pop();
             },
             child: const Text('Ok'),

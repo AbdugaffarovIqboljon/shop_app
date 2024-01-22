@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart' as provider;
+import 'package:shop_app/model/cart_model.dart';
 import 'package:shop_app/model/product_model.dart';
+import 'package:shop_app/screens/cart_screen/cart_screen_views/alert_dialog.dart';
 import 'package:shop_app/services/cart_service/add_to_cart_service.dart';
+
+import '../../services/product_service.dart';
+import 'cart_screen_views/empty_cart_case.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -13,6 +18,8 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   List<ProductModel> selectedProducts = [];
+  ProductDatabase productDatabase = ProductDatabase();
+  ProductService productService = ProductService();
 
   void toggleProductSelection(ProductModel product) {
     setState(() {
@@ -22,40 +29,6 @@ class _CartScreenState extends State<CartScreen> {
         selectedProducts.add(product);
       }
     });
-  }
-
-  void showOrderConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Lottie.asset("assets/lotties/delivery_lottie.json"),
-              SizedBox(height: 30.sp),
-              Text(
-                "Your order will be delivered in 1-2 days. Track your order in Orders Screen",
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 17.sp,
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                selectedProducts.clear();
-              },
-              child: const Text('Ok'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -73,61 +46,103 @@ class _CartScreenState extends State<CartScreen> {
         ),
         centerTitle: true,
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(20),
-        itemCount: Provider.of(context).cart.items.length,
-        itemBuilder: (context, index) {
-          final cartItem = Provider.of(context).cart.items[index];
-          final product = cartItem.product;
-          final isSelected = selectedProducts.contains(product);
+      body: FutureBuilder<List<ProductModel>>(
+        future: productService.getSavedProducts(),
+        builder: (context, snapshot) {
+          List<CartItem> cartItems = MyProvider.of(context).cart.items;
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text("Error: ${snapshot.error}");
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return buildEmptyCart();
+          } else {
+            List<ProductModel> products = snapshot.data!;
+            return ListView.builder(
+              padding: const EdgeInsets.all(20),
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                final product = products[index];
+                final cartItem = cartItems.firstWhere(
+                  (item) => item.product.id == product.id,
+                  orElse: () => CartItem(id: -1, product: product),
+                );
 
-          return Card(
-            clipBehavior: Clip.antiAlias,
-            color: Colors.white,
-            child: ListTile(
-              onTap: () {
-                toggleProductSelection(product);
-              },
-              leading: Image(
-                image: NetworkImage(product.image),
-              ),
-              title: Text(
-                product.title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 5),
-                  Row(
-                    children: [
-                      Text(
-                        "Quantity: ${cartItem.quantity.toString()}",
-                        style: const TextStyle(
-                          fontSize: 16,
-                          // color: Colors.white,
-                        ),
+                final isSelected = selectedProducts.contains(product);
+
+                return SizedBox(
+                  height: 120.sp,
+                  width: double.infinity,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(20),
                       ),
-                      const Spacer(),
-                      Text("Total: \$${cartItem.total.toStringAsFixed(2)}"),
-                    ],
+                      side: BorderSide(
+                        color: isSelected
+                            ? Colors.grey.shade700
+                            : Colors.grey.shade200,
+                      ),
+                    ),
+                    elevation: 0,
+                    clipBehavior: Clip.antiAlias,
+                    color: Colors.white,
+                    child: ListTile(
+                      onTap: () {
+                        toggleProductSelection(product);
+                      },
+                      minLeadingWidth: 50.sp,
+                      leading: Image(
+                        height: 80.sp,
+                        width: 80.sp,
+                        image: NetworkImage(product.image),
+                      ),
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            product.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            "Quantity: ${cartItem.quantity.toString()}",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              // color: Colors.white,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Total: \$${cartItem.total.toStringAsFixed(2)}",
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  // productDatabase.removeProduct(product.id);
+                                },
+                                icon: const Icon(Icons.delete_rounded),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      tileColor: Colors.transparent,
+                    ),
                   ),
-                ],
-              ),
-              tileColor: isSelected
-                  ? Colors.grey.withOpacity(0.3)
-                  : Colors.transparent,
-            ),
-          );
+                );
+              },
+            );
+          }
         },
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.deepPurpleAccent,
         onPressed: () {
-          if (selectedProducts.isNotEmpty) {
-            showOrderConfirmationDialog(context);
-          }
+          if (selectedProducts.isEmpty) return;
+          showAlertDialog(context);
         },
         child: const Icon(
           Icons.payment_outlined,

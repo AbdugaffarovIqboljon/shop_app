@@ -20,10 +20,11 @@ class _ByCategoriesWidgetState extends State<ByCategoriesWidget> {
     return Column(
       children: [
         SizedBox(
-          height: 130.sp,
+          height: 100.sp,
           child: ListView.separated(
             shrinkWrap: true,
             itemCount: categories.length,
+            padding: REdgeInsets.symmetric(horizontal: 1),
             scrollDirection: Axis.horizontal,
             itemBuilder: ((context, index) {
               final response = categories[index];
@@ -32,30 +33,39 @@ class _ByCategoriesWidgetState extends State<ByCategoriesWidget> {
                 onTap: () => _onTapItem(index),
                 child: Column(
                   children: [
+                    const SizedBox(height: 10),
                     Container(
+                      height: 50.sp,
+                      width: 120.sp,
                       decoration: BoxDecoration(
                         color: isActive
-                            ? Colors.deepPurple.shade100
-                            : const Color(0xFFFFFFFF),
-                        border: Border.all(color: Colors.deepPurpleAccent),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Image.asset(
-                          response.icon,
-                          width: 28.sp,
-                          height: 28.sp,
+                            ? Colors.deepPurple.shade700
+                            : const Color(0xFFF7F8FB),
+                        border: Border.all(
+                          color: isActive
+                              ? Colors.transparent
+                              : Colors.black12,
                         ),
+                        boxShadow: [
+                           isActive ? BoxShadow(
+                            color: Colors.deepPurpleAccent.shade100,
+                            offset: const Offset(2, 2),
+                            blurRadius: 10,
+                            spreadRadius: 0,
+                          ) : const BoxShadow(),
+                        ],
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                    ),
-                    SizedBox(height: 8.sp),
-                    Text(
-                      response.title,
-                      style: const TextStyle(
-                        color: Color(0xff424242),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                      child: Center(
+                        child: Text(
+                          response.title,
+                          style: TextStyle(
+                            color: isActive == false
+                                ? Colors.deepPurpleAccent : const Color(0xffffffff),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17.sp,
+                          ),
+                        ),
                       ),
                     ),
                   ],

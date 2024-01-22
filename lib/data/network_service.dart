@@ -3,28 +3,16 @@ import 'package:shop_app/model/product_model.dart';
 
 import '../core/params/apis.dart';
 
-abstract class Network {
+class NetworkService {
+  final Dio _dio = Dio();
+
+  /// #GET ALL PRODUCTS
   Future<List<ProductModel>> methodGetAllProducts({
     String domain = Api.baseUrl,
-    required String api,
-  });
-}
-
-class DioService implements Network {
-  late final Dio _dio;
-
-  DioService() {
-    _dio = Dio();
-  }
-
-  @override
-  Future<List<ProductModel>> methodGetAllProducts({
-    String domain = Api.baseUrl,
-    required String api,
   }) async {
     try {
-      final response = await _dio.get("$domain$api");
-      if (response.statusCode == 200) {
+      final response = await _dio.get("$domain${Api.apiGETProducts}");
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final List<dynamic> jsonList = response.data as List<dynamic>;
         final List<ProductModel> products = jsonList
             .map((json) => ProductModel.fromJson(json as Map<String, Object?>))
@@ -38,5 +26,23 @@ class DioService implements Network {
       throw Exception('Failed to fetch products: $e');
     }
   }
-}
 
+  /// #GET Products By ID
+  Future<ProductModel> methodGetProductById({
+    required int productId,
+    String domain = Api.baseUrl,
+  }) async {
+    try {
+      final response = await _dio.get("$domain${Api.apiGETProducts}/$productId");
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> json = response.data as Map<String, dynamic>;
+        final ProductModel product = ProductModel.fromJson(json);
+        return product;
+      } else {
+        throw Exception('Failed to fetch product by ID: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch product by ID: $e');
+    }
+  }
+}
