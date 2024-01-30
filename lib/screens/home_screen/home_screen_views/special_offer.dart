@@ -10,8 +10,6 @@ import '../../../model/product_model.dart';
 typedef SpecialOffersOnTapSeeAll = void Function();
 
 class SpecialOffers extends StatefulWidget {
-
-
   const SpecialOffers({super.key});
 
   @override
@@ -54,7 +52,6 @@ class _SpecialOffersState extends State<SpecialOffers> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildTitle(),
         const SizedBox(height: 10),
         Stack(
           children: [
@@ -98,34 +95,6 @@ class _SpecialOffersState extends State<SpecialOffers> {
             ),
             _buildPageIndicator()
           ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTitle() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text(
-          'Special Offers',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: Color(0xFF212121),
-          ),
-        ),
-        TextButton(
-          onPressed: navigateToSpecialOfferScreen,
-          child: const Text(
-            'See All',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Color(0xFF212121),
-            ),
-          ),
         ),
       ],
     );

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -8,7 +7,10 @@ class HomeAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      elevation: 0,
+      scrolledUnderElevation: 0,
       backgroundColor: Colors.white,
+      clipBehavior: Clip.antiAlias,
       title: const Text(
         'Good Morning \t👋',
         style: TextStyle(
@@ -19,16 +21,10 @@ class HomeAppBar extends StatelessWidget {
       ),
       actions: [
         IconButton(
-          icon: Icon(
-            CupertinoIcons.heart,
-            size: 31.sp,
-          ),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: Icon(
-            CupertinoIcons.bell,
-            size: 31.sp,
+          icon: Image.asset(
+            "assets/icons/profile/notification@2x.png",
+            height: 32.sp,
+            width: 32.sp,
           ),
           onPressed: () {},
         ),

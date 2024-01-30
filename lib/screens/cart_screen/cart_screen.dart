@@ -1,35 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/model/cart_model.dart';
+import 'package:provider/provider.dart';
 import 'package:shop_app/model/product_model.dart';
 import 'package:shop_app/screens/cart_screen/cart_screen_views/alert_dialog.dart';
-import 'package:shop_app/services/cart_service/add_to_cart_service.dart';
 
 import '../../services/product_service.dart';
+import 'cart_screen_views/cart_list_view.dart';
 import 'cart_screen_views/empty_cart_case.dart';
 
-class CartScreen extends StatefulWidget {
+class CartScreen extends StatelessWidget {
   const CartScreen({Key? key}) : super(key: key);
 
   @override
-  State<CartScreen> createState() => _CartScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => CartProvider(),
+      child: _CartScreenContent(),
+    );
+  }
 }
 
-class _CartScreenState extends State<CartScreen> {
-  List<ProductModel> selectedProducts = [];
-  ProductDatabase productDatabase = ProductDatabase();
-  ProductService productService = ProductService();
-  bool isListTileTapped = false;
+class _CartScreenContent extends StatefulWidget {
+  @override
+  State<_CartScreenContent> createState() => _CartScreenState();
+}
 
-  void toggleProductSelection(ProductModel product) {
-    setState(() {
-      if (selectedProducts.contains(product)) {
-        selectedProducts.remove(product);
-      } else {
-        selectedProducts.add(product);
-      }
-    });
-  }
+class _CartScreenState extends State<_CartScreenContent> {
+  LocalDatabase localDatabase = LocalDatabase();
 
   @override
   Widget build(BuildContext context) {
@@ -39,17 +36,15 @@ class _CartScreenState extends State<CartScreen> {
         title: Text(
           "Your Cart",
           style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 24.sp,
-            color: const Color(0xFF212121),
+            fontSize: 23.sp,
+            fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
       ),
       body: FutureBuilder<List<ProductModel>>(
-        future: productService.getSavedProducts(),
+        future: localDatabase.getSavedItems(),
         builder: (context, snapshot) {
-          List<CartItem> cartItems = MyProvider.of(context).cart.items;
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
           } else if (snapshot.hasError) {
@@ -58,81 +53,16 @@ class _CartScreenState extends State<CartScreen> {
             return buildEmptyCart();
           } else {
             List<ProductModel> products = snapshot.data!;
-            return ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
-              itemCount: products.length,
-              itemBuilder: (context, index) {
-                final product = products[index];
-                final cartItem = cartItems.firstWhere(
-                  (item) => item.product.id == product.id,
-                  orElse: () => CartItem(id: 1, product: product),
-                );
-
-                final isSelected = selectedProducts.contains(product);
-
-                return SizedBox(
-                  height: 130.sp,
-                  width: double.infinity,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                      side: BorderSide(
-                        color: isSelected
-                            ? Colors.grey.shade700
-                            : Colors.grey.shade200,
-                      ),
-                    ),
-                    elevation: 0,
-                    clipBehavior: Clip.antiAlias,
-                    color: Colors.white,
-                    child: ListTile(
-                      onTap: () {
-                        toggleProductSelection(product);
-                      },
-                      minLeadingWidth: 50.sp,
-                      leading: Image(
-                        height: 80.sp,
-                        width: 80.sp,
-                        image: NetworkImage(product.image),
-                      ),
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            product.title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            "Quantity: ${cartItem.quantity.toString()}",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              // color: Colors.white,
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Total: \$${cartItem.total.toStringAsFixed(2)}",
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  // productDatabase.removeProduct(product.id);
-                                },
-                                icon: const Icon(Icons.delete_rounded),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      tileColor: isSelected ? Colors.grey.shade100 : Colors.transparent,
-                    ),
-                  ),
-                );
+            return buildListView(
+              context,
+              products,
+              () async {
+                localDatabase.removeItems();
+                products.remove(snapshot.data?.first);
+                for (var item in products) {
+                  localDatabase.saveData(item);
+                }
+                setState(() {});
               },
             );
           }
@@ -141,7 +71,9 @@ class _CartScreenState extends State<CartScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.deepPurpleAccent,
         onPressed: () {
-          if (selectedProducts.isEmpty) return;
+          final cartProvider =
+              Provider.of<CartProvider>(context, listen: false);
+          if (cartProvider.selectedProducts.isEmpty) return;
           showAlertDialog(context);
         },
         child: const Icon(
@@ -150,5 +82,21 @@ class _CartScreenState extends State<CartScreen> {
         ),
       ),
     );
+  }
+}
+
+class CartProvider extends ChangeNotifier {
+  List<ProductModel> selectedProducts = [];
+  LocalDatabase localDatabase = LocalDatabase();
+
+  void toggleProductSelection({
+    required ProductModel product,
+  }) {
+    if (selectedProducts.contains(product)) {
+      selectedProducts.remove(product);
+    } else {
+      selectedProducts.add(product);
+    }
+    notifyListeners();
   }
 }

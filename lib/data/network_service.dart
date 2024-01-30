@@ -41,7 +41,8 @@ class NetworkService {
         return product;
       } else {
         throw Exception(
-            'Failed to fetch product by ID: ${response.statusCode}');
+          'Failed to fetch product by ID: ${response.statusCode}',
+        );
       }
     } catch (e) {
       throw Exception('Failed to fetch product by ID: $e');
@@ -54,7 +55,8 @@ class NetworkService {
     String domain = Api.baseUrl,
   }) async {
     try {
-      final response = await _dio.get("$domain${Api.apiGETProducts}/category/$category");
+      final response =
+          await _dio.get("$domain${Api.apiGETProducts}/category/$category");
       if (response.statusCode == 200 || response.statusCode == 201) {
         final List<dynamic> jsonList = response.data as List<dynamic>;
         final List<ProductModel> products = jsonList

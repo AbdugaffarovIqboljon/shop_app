@@ -25,12 +25,6 @@ dependencies:
   #dio
   dio: ^5.3.3
 
-  #sqflite
-  sqflite: ^2.3.0
-
-  #path_for_sqflite
-  path: ^1.8.3
-
   #lottie_animation
   lottie: ^2.7.0
 
@@ -42,6 +36,10 @@ dependencies:
 
   #Skeleton_animation
   skeletonizer: ^1.0.1
+
+  shared_preferences: ^2.2.2
+  firebase_core: ^2.24.2
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:

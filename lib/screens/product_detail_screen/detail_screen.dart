@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:shop_app/screens/product_detail_screen/product_detail_screen_views/add_to_cart_button.dart';
 import 'package:shop_app/screens/product_detail_screen/product_detail_screen_views/added_to_cart_dialog.dart';
 import 'package:shop_app/screens/product_detail_screen/product_detail_screen_views/build_tile.dart';
 import 'package:shop_app/screens/product_detail_screen/product_detail_screen_views/product_description.dart';
-import 'package:shop_app/services/cart_service/add_to_cart_service.dart';
+import 'package:shop_app/screens/product_detail_screen/product_detail_screen_views/product_detail_skeleton.dart';
 
 import '../../data/network_service.dart';
 import '../../model/product_model.dart';
-import '../../model/special_offer.dart';
 import '../../services/product_service.dart';
 
 class ShopDetailScreen extends StatefulWidget {
@@ -23,192 +23,136 @@ class ShopDetailScreen extends StatefulWidget {
 }
 
 class _ShopDetailScreenState extends State<ShopDetailScreen> {
-  int _quantity = 0;
-  late final List<SpecialOffer> datas = homeSpecialOffers;
-  final NetworkService productService = NetworkService();
-  List<ProductModel> productList = [];
-  bool _isCollected = false;
-  late double totalPrice;
-
-  Future<void> saveProductToSqflite(ProductModel product, int quantity) async {
-    final database = ProductDatabase();
-
-    await database.open();
-    bool containsProduct = await database.containsProduct(product.id);
-
-    if (containsProduct) {
-      await database.updateProductQuantity(
-        productId: product.id,
-        quantity: quantity,
-      );
-    } else {
-      await database.insertProduct(product);
-      await database.updateProductQuantity(
-        productId: product.id,
-        quantity: quantity,
-      );
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    totalPrice = 0;
-    _loadProductDetails();
-  }
-
-  Future<void> _loadProductDetails() async {
-    try {
-      final ProductModel product = await productService.methodGetProductById(
-        productId: widget.productId,
-      );
-
-      setState(() {
-        productList.add(product);
-      });
-    } catch (e) {
-      print('Error fetching product details: $e');
-    }
-  }
-
-  void addToCart(ProductModel product) {
-    MyProvider.of(context).addToCart(
-      product: product,
-      quantity: _quantity,
-    );
-
-    saveProductToSqflite(product, _quantity);
-
-    totalPrice > 0 ? showDelayedDialog(context) : null;
-  }
+  LocalDatabase localDatabase = LocalDatabase();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          SizedBox(
-            height: 950.sp,
-            child: ListView.builder(
-              itemCount: productList.length,
-              shrinkWrap: true,
-              primary: false,
-              itemBuilder: (context, index) {
-                final product = productList[index];
-                return Column(
-                  children: [
-                    Align(
-                      alignment: Alignment(0.95.sp, 0),
-                      child: IconButton(
-                        onPressed: () =>
-                            setState(() => _isCollected = !_isCollected),
-                        icon: Image.asset(
-                          'assets/icons/${_isCollected ? 'bold' : 'light'}/heart@2x.png',
-                          height: 35.sp,
+    return Consumer<ShopDetailProvider>(
+      builder: (context, shopDetailProvider, child) {
+        return Scaffold(
+          body: Stack(
+            children: [
+              SizedBox(
+                height: 1000.sp,
+                child: FutureBuilder<ProductModel>(
+                  future:
+                      shopDetailProvider.loadProductDetails(widget.productId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(child: Text("Error: ${snapshot.error}"));
+                    } else if (!snapshot.hasData || snapshot.data == null) {
+                      return buildSkeletonDetail();
+                    } else {
+                      final product = snapshot.data!;
+                      return SingleChildScrollView(
+                        primary: true,
+                        child: Column(
+                          children: [
+                            SizedBox(height: 50.sp),
+                            Align(
+                              alignment: Alignment(0.95.sp, 0),
+                              child: IconButton(
+                                onPressed: () =>
+                                    shopDetailProvider.toggleCollection(),
+                                icon: Image.asset(
+                                  'assets/icons/${shopDetailProvider.isCollected ? 'bold' : 'light'}/heart@2x.png',
+                                  height: 35.sp,
+                                ),
+                              ),
+                            ),
+                            Image(
+                              height: 300.sp,
+                              width: 350.sp,
+                              image: NetworkImage(product.image),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 20,
+                                horizontal: 16,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ...buildTitle(
+                                    product.title,
+                                    product.rating.rate,
+                                    product.rating.count,
+                                  ),
+                                  const SizedBox(height: 15),
+                                  const Divider(color: Color(0xFFEEEEEE)),
+                                  const SizedBox(height: 15),
+                                  ...buildDescription(product.description),
+                                  SizedBox(height: 125.sp),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ),
-                    Image(
-                      height: 300.sp,
-                      width: 350.sp,
-                      image: NetworkImage(product.image),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 20,
-                        horizontal: 16,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ...buildTitle(
-                            product.title,
-                            product.rating.rate,
-                            product.rating.count,
-                            product.price,
-                          ),
-                          const SizedBox(height: 15),
-                          const Divider(color: Color(0xFFEEEEEE)),
-                          const SizedBox(height: 15),
-                          ...buildDescription(product.description),
-                          SizedBox(height: 25.sp),
-                          _buildQuantity(product),
-                          SizedBox(height: 125.sp),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-
-          /// #Add to Cart Button
-          addToCartButton(
-            totalPrice,
-            () => addToCart(productList.first),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuantity(ProductModel product) {
-    return Row(
-      children: [
-        const Text(
-          'Quantity',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-        const SizedBox(width: 20),
-        Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(24)),
-            color: Color(0xFFF3F3F3),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          child: Material(
-            color: Colors.transparent,
-            child: Row(
-              children: [
-                InkWell(
-                  child: Image.asset(
-                    'assets/icons/detail/minus@2x.png',
-                    scale: 2,
-                  ),
-                  onTap: () {
-                    if (_quantity <= 0) return;
-                    setState(() => _quantity -= 1);
-                    totalPrice > 0 ? totalPrice -= product.price : 0;
+                      );
+                    }
                   },
                 ),
-                const SizedBox(width: 20),
-                Text(
-                  '$_quantity',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-                const SizedBox(width: 20),
-                InkWell(
-                  child: Image.asset(
-                    'assets/icons/detail/plus@2x.png',
-                    scale: 2,
-                  ),
-                  onTap: () {
-                    setState(() => _quantity += 1);
-                    totalPrice += product.price;
-                  },
-                ),
-              ],
-            ),
+              ),
+
+              /// #Add to Cart Button
+              addToCartButton(
+                shopDetailProvider.productPrice,
+                () {
+                  shopDetailProvider.addToCart();
+                  showDelayedDialog(context);
+                },
+              ),
+            ],
           ),
-        ),
-      ],
+        );
+      },
     );
   }
+}
+
+class ShopDetailProvider extends ChangeNotifier {
+  final NetworkService productService = NetworkService();
+  final LocalDatabase localDatabase = LocalDatabase();
+
+  bool _isCollected = false;
+  ProductModel? _product;
+
+  Future<ProductModel> loadProductDetails(int productId) async {
+    try {
+      _product =
+          await productService.methodGetProductById(productId: productId);
+      notifyListeners();
+      return _product!;
+    } catch (e) {
+      print('Error fetching product details: $e');
+      rethrow;
+    }
+  }
+
+  void toggleCollection() {
+    List<ProductModel> likedProducts = [];
+    LocalDatabase localDatabase = LocalDatabase();
+
+    if (likedProducts.contains(product)) {
+      likedProducts.remove(product);
+      localDatabase.removeLikedProduct(product);
+      _isCollected = !_isCollected;
+    } else {
+      likedProducts.add(product);
+      localDatabase.saveLikedProducts(likedProducts);
+      _isCollected = !_isCollected;
+    }
+    notifyListeners();
+  }
+
+  void addToCart() {
+    localDatabase.saveData(product);
+    notifyListeners();
+  }
+
+  bool get isCollected => _isCollected;
+
+  ProductModel get product => _product!;
+
+  double get productPrice => _product?.price.toDouble() ?? 0.0;
 }

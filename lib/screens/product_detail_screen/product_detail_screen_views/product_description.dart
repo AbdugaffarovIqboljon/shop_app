@@ -7,7 +7,7 @@ List<Widget> buildDescription(String description) {
     Text(
       'Description',
       style: TextStyle(
-        fontSize: 18.sp,
+        fontSize: 19.sp,
         fontWeight: FontWeight.bold,
       ),
     ),
@@ -17,16 +17,16 @@ List<Widget> buildDescription(String description) {
       expandText: 'view more',
       collapseText: 'view less',
       textAlign: TextAlign.start,
-      maxLines: 3,
+      maxLines: 4,
       animation: true,
       animationDuration: const Duration(milliseconds: 800),
       animationCurve: Curves.linearToEaseOut,
-      style: const TextStyle(
-        fontSize: 15,
+      style: TextStyle(
+        fontSize: 17.sp,
         fontWeight: FontWeight.w500,
       ),
       linkStyle: const TextStyle(
-        fontSize: 17,
+        fontSize: 19,
         color: Color(0xFF424242),
         fontWeight: FontWeight.bold,
       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-Widget addToCartButton(double totalPrice, void Function() onTap) {
+Widget addToCartButton(double price, void Function() onTap) {
   buildAddCard() => Container(
     height: 58.sp,
     width: 160.sp,
@@ -66,7 +66,7 @@ Widget addToCartButton(double totalPrice, void Function() onTap) {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    '\$${totalPrice.toStringAsFixed(2)}',
+                    '\$${price.toStringAsFixed(2)}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 24.sp,

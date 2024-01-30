@@ -17,11 +17,13 @@ class BottomNavBar extends StatelessWidget {
       BottomNavigationBarItem(
         icon: Image(
           image: const AssetImage('assets/icons/tabbar/ic_house_chimney.png'),
+          color: Colors.grey.shade800,
           height: 21.sp,
           width: 21.sp,
         ),
         activeIcon: Image(
           image: const AssetImage('assets/icons/tabbar/ic_house_chimney_fill.png'),
+          color: Colors.deepPurple.shade700,
           height: 21.sp,
           width: 21.sp,
         ),
@@ -30,11 +32,13 @@ class BottomNavBar extends StatelessWidget {
       BottomNavigationBarItem(
         icon: Image(
           image: const AssetImage('assets/icons/tabbar/shopping-cart.png'),
+          color: Colors.grey.shade800,
           height: 22.sp,
           width: 22.sp,
         ),
         activeIcon: Image(
           image: const AssetImage('assets/icons/tabbar/ic_cart_shopping_fast_fill.png'),
+          color: Colors.deepPurple.shade700,
           height: 22.sp,
           width: 22.sp,
         ),
@@ -42,25 +46,29 @@ class BottomNavBar extends StatelessWidget {
       ),
       BottomNavigationBarItem(
         icon: Image(
-          image: const AssetImage('assets/icons/tabbar/ic_box.png'),
+          image: const AssetImage('assets/icons/tabbar/ic_bookmark.png'),
+          color: Colors.grey.shade800,
           height: 18.sp,
           width: 18.sp,
         ),
         activeIcon: Image(
-          image: const AssetImage('assets/icons/tabbar/ic_box_fill.png'),
+          image: const AssetImage('assets/icons/tabbar/ic_bookmark_fill.png'),
+          color: Colors.deepPurple.shade700,
           height: 18.sp,
           width: 18.sp,
         ),
-        label: 'Orders',
+        label: 'Saved',
       ),
       BottomNavigationBarItem(
         icon: Image(
           image: const AssetImage('assets/icons/tabbar/ic_user.png'),
+          color: Colors.grey.shade800,
           height: 21.sp,
           width: 21.sp,
         ),
         activeIcon: Image(
           image: const AssetImage('assets/icons/tabbar/ic_user_fill.png'),
+          color: Colors.deepPurple.shade700,
           height: 21.sp,
           width: 21.sp,
         ),

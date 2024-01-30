@@ -9,48 +9,38 @@ class ProfileHeader extends StatelessWidget {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Stack(
-              children: [
-                CircleAvatar(
-                  radius: 60.sp,
-                  backgroundImage: const AssetImage('assets/icons/home/img.png'),
-                ),
-                Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: InkWell(
-                      child: Image.asset(
-                        'assets/icons/profile/edit_square@2x.png',
-                        scale: 2,
-                      ),
-                      onTap: () {},
-                    ),
-                  ),
-                ),
-              ],
+            const SizedBox(),
+            CircleAvatar(
+              radius: 60.sp,
+              backgroundImage:
+                  const AssetImage('assets/icons/home/img.png'),
             ),
-             Column(
+            SizedBox(width: 30.sp),
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'IqboljonFlutterDev',
+                  "Your Full Name",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 23.sp,
+                    fontSize: 21.sp,
                   ),
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'coderikhbolsheikh@gmail.com',
+                  'Your Email',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 14.sp,
+                    fontSize: 18.sp,
                   ),
                 ),
               ],
             ),
+            const SizedBox(),
           ],
         ),
         const SizedBox(height: 15),

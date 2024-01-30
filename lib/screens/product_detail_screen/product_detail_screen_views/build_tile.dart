@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 List<Widget> buildTitle(
-    String productName,
-    num rate,
-    int count,
-    num price,
-    ) {
+  String productName,
+  num rate,
+  int count,
+) {
   return <Widget>[
     const SizedBox(height: 10),
     Text(
@@ -16,15 +15,16 @@ List<Widget> buildTitle(
     ),
     const SizedBox(height: 30),
     Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          '\$$price',
+          '$rate \u2B50 \trating',
           style: TextStyle(
-            fontSize: 21.sp,
-            fontWeight: FontWeight.w600,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(width: 30),
+        const SizedBox(width: 8),
         Container(
           padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
           decoration: const BoxDecoration(
@@ -37,16 +37,6 @@ List<Widget> buildTitle(
               fontSize: 15.sp,
               fontWeight: FontWeight.w500,
             ),
-          ),
-        ),
-        const SizedBox(width: 16),
-        const Icon(Icons.star_rate, color: Colors.orange),
-        const SizedBox(width: 8),
-        Text(
-          '$rate rating',
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
           ),
         ),
       ],
