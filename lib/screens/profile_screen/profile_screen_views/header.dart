@@ -1,49 +1,103 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({super.key});
+import '../../../services/user_info_service.dart';
+
+class ProfileHeader extends StatefulWidget {
+  const ProfileHeader({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileHeader> createState() => _ProfileHeaderState();
+}
+
+class _ProfileHeaderState extends State<ProfileHeader> {
+  late StreamSubscription _streamSubscription;
+  late Map<String, String> _userData = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _streamSubscription = UserInfoDatabase.userInfoStream.listen((userData) {
+      if (mounted) {
+        setState(() {
+          _userData = userData;
+        });
+      }
+    });
+
+    UserInfoDatabase.getUserInfo().then((userInfo) {
+      if (mounted && userInfo != null) {
+        setState(() {
+          _userData = userInfo;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        /// #User Details
+        Column(
           children: [
-            const SizedBox(),
-            CircleAvatar(
-              radius: 60.sp,
-              backgroundImage:
-                  const AssetImage('assets/icons/home/img.png'),
-            ),
-            SizedBox(width: 30.sp),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
-                Text(
-                  "Your Full Name",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 21.sp,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'Your Email',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.sp,
+                const Spacer(),
+                SizedBox(
+                  height: 65.sp,
+                  width: 65.sp,
+                  child: const CircleAvatar(
+                    backgroundImage: AssetImage(
+                      'assets/icons/home/img.png',
+                    ),
                   ),
                 ),
+                const Spacer(flex: 2),
+                Expanded(
+                  flex: 12,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _userData['name'] ?? 'Your Full Name',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20.sp,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        _userData['email'] ?? 'Your Email',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 19.sp,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
               ],
             ),
-            const SizedBox(),
           ],
         ),
-        const SizedBox(height: 15),
+
+        SizedBox(height: 35.sp),
+
+        /// #Divider
         const Divider(
           thickness: 1.5,
           color: Color(0xFFEEEEEE),

@@ -38,8 +38,10 @@ dependencies:
   skeletonizer: ^1.0.1
 
   shared_preferences: ^2.2.2
-  firebase_core: ^2.24.2
-  dropdown_button2: ^2.3.9
+  firebase_core: ^2.25.2
+  cloud_firestore: ^4.15.2
+
+
 
 dev_dependencies:
   flutter_test:
@@ -62,13 +64,18 @@ flutter:
     - assets/icons/detail/
     - assets/icons/categories/
     - assets/lotties/
+    - assets/images/
 
 
   fonts:
     - family: Urbanist
       fonts:
         - asset: assets/fonts/Urbanist-Regular.ttf
+          weight: 400
+          style: italic
         - asset: assets/fonts/Urbanist-Medium.ttf
           weight: 500
+          style: italic
         - asset: assets/fonts/Urbanist-Bold.ttf
           weight: 700
+          style: italic

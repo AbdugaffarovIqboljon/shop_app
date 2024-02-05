@@ -6,7 +6,7 @@ Widget addToCartButton(double price, void Function() onTap) {
     height: 58.sp,
     width: 160.sp,
     decoration: BoxDecoration(
-      borderRadius: const BorderRadius.all(Radius.circular(29)),
+      borderRadius: const BorderRadius.all(Radius.circular(30)),
       color: Colors.deepPurpleAccent.shade700,
       boxShadow: [
         BoxShadow(

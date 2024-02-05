@@ -4,6 +4,7 @@ import 'package:shop_app/screens/profile_screen/payment_screen.dart';
 import 'package:shop_app/screens/profile_screen/profile_screen_views/header.dart';
 import 'package:shop_app/screens/profile_screen/security_screen.dart';
 
+import '../../services/user_info_service.dart';
 import 'about_us_screen.dart';
 import 'address_screen.dart';
 import 'edit_profile_screen.dart';
@@ -77,6 +78,113 @@ class _ProfileScreenState extends State<ProfileScreen> {
           titleColor: const Color(0xFFF75555),
         ),
       ];
+
+  Future showLogoutBottomSheet() async {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      useSafeArea: true,
+      elevation: 30,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 26.0, horizontal: 20),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(30),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Center(
+                child: Text(
+                  "Log Out",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 23,
+                    color: Color(0xFFF85656),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Divider(
+                indent: 10,
+                endIndent: 10,
+              ),
+              const SizedBox(height: 10),
+              Center(
+                child: Text(
+                  "Do you really want to log out?",
+                  style: TextStyle(fontSize: 19.sp),
+                ),
+              ),
+              const SizedBox(height: 25.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  /// #Cancel Button
+                  buildLogOutButton(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    displayText: "Cancel",
+                  ),
+
+                  /// #Sure To LogOut
+                  buildLogOutButton(
+                    onTap: () {
+                      UserInfoDatabase.deleteUserInfo();
+                      Navigator.pop(context);
+                    },
+                    displayText: "Yes, Log Out",
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Container buildLogOutButton({
+    required void Function()? onTap,
+    required String displayText,
+  }) {
+    return Container(
+      height: 52.sp,
+      width: 160.sp,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(30)),
+        color: Colors.deepPurpleAccent.shade700,
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(4, 6),
+            blurRadius: 15,
+            color: Colors.deepPurpleAccent.withOpacity(0.6),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: const BorderRadius.all(Radius.circular(30)),
+          child: Center(
+            child: Text(
+              displayText,
+              style: TextStyle(
+                fontSize: 19.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,9 +260,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const EditProfileScreen()),
+                builder: (context) => const EditProfileScreen(),
+              ),
             );
-
             break;
           case 1:
             // Address Screen
@@ -183,13 +291,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               context,
               MaterialPageRoute(builder: (context) => const AboutUsScreen()),
             );
-            // break;
-            // case 5:
+            break;
+          case 5:
             // Log Out Screen
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => LogoutScreen()),
-            // );
+            showLogoutBottomSheet();
             break;
           default:
             break;
