@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/services/product_service.dart';
 
 import '../../../model/product_model.dart';
 import '../cart_screen.dart';
@@ -8,7 +9,7 @@ import '../cart_screen.dart';
 Widget buildListView(
   BuildContext context,
   List<ProductModel> products,
-  void Function()? onPressed,
+  void Function(ProductModel)? onPressed,
 ) {
   return ListView.builder(
     clipBehavior: Clip.antiAlias,
@@ -18,7 +19,7 @@ Widget buildListView(
       final product = products[index];
       final cartProvider = Provider.of<CartProvider>(context);
       final isSelected = cartProvider.selectedProducts.contains(product);
-
+      LocalDatabase localDatabase = LocalDatabase();
       return Container(
         height: 120.sp,
         margin: const EdgeInsets.symmetric(vertical: 8),
@@ -61,8 +62,31 @@ Widget buildListView(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
+                FutureBuilder<int>(
+                  future: localDatabase.getProductQuantity(product.id),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    } else {
+                      int quantity = snapshot.data ?? 0;
+                      return Text(
+                        'Quantity: $quantity',
+                        style: TextStyle(
+                          fontSize: 15.5.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      );
+                    }
+                  },
+                ),
                 IconButton(
-                  onPressed: onPressed,
+                  onPressed: () {
+                    if (onPressed != null) {
+                      onPressed(product);
+                    }
+                  },
                   icon: const Icon(Icons.delete_rounded),
                 ),
               ],

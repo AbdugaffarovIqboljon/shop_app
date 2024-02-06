@@ -23,12 +23,14 @@ class ProductCard extends StatefulWidget {
 
 class _ProductCardState extends State<ProductCard> {
   LocalDatabase localDatabase = LocalDatabase();
+  int quantity = 0;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<LikedProductsProvider>(
       builder: (BuildContext context, likedProductsProvider, Widget? child) {
-        bool isLiked = likedProductsProvider.likedProducts.contains(widget.product);
+        bool isLiked =
+            likedProductsProvider.likedProducts.contains(widget.product);
         return InkWell(
           onTap: widget.onTap,
           child: Container(
@@ -123,7 +125,12 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                     IconButton(
                       onPressed: () {
-                        localDatabase.saveData(widget.product);
+                        quantity++;
+                        localDatabase.saveData(
+                          product: widget.product,
+                          quantity: quantity,
+                        );
+                        print("Quantity: $quantity");
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             duration: const Duration(milliseconds: 600),

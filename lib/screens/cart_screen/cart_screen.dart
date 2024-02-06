@@ -48,6 +48,7 @@ class _CartScreenState extends State<_CartScreenContent> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
           } else if (snapshot.hasError) {
+            print("ERROR: ${snapshot.error}");
             return Text("Error: ${snapshot.error}");
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return buildEmptyCart();
@@ -56,12 +57,12 @@ class _CartScreenState extends State<_CartScreenContent> {
             return buildListView(
               context,
               products,
-              () async {
-                localDatabase.removeItems();
-                products.remove(snapshot.data?.first);
-                for (var item in products) {
-                  localDatabase.saveData(item);
-                }
+              (ProductModel product) async {
+                final cartProvider = Provider.of<CartProvider>(
+                  context,
+                  listen: false,
+                );
+                await cartProvider.removeItems(product);
                 setState(() {});
               },
             );
@@ -97,6 +98,12 @@ class CartProvider extends ChangeNotifier {
     } else {
       selectedProducts.add(product);
     }
+    notifyListeners();
+  }
+
+  Future<void> removeItems(ProductModel product) async {
+    localDatabase.removeItem(product);
+    selectedProducts.remove(product);
     notifyListeners();
   }
 }

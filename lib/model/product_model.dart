@@ -17,6 +17,22 @@ class ProductModel {
     required this.rating,
   });
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ProductModel &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          title == other.title &&
+          price == other.price &&
+          description == other.description &&
+          category == other.category &&
+          image == other.image &&
+          rating == other.rating;
+
+  @override
+  int get hashCode => Object.hash(id, title, category, rating);
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -67,10 +83,21 @@ class Rating {
         count: json['count'] as int,
       );
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Rating &&
+          runtimeType == other.runtimeType &&
+          rate == other.rate &&
+          count == other.count;
+
   Map<String, dynamic> toJson() {
     return {
       'rate': rate,
       'count': count,
     };
   }
+
+  @override
+  int get hashCode => Object.hash(rate, count);
 }

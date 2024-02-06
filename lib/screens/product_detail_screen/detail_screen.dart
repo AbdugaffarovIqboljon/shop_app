@@ -25,6 +25,59 @@ class ShopDetailScreen extends StatefulWidget {
 class _ShopDetailScreenState extends State<ShopDetailScreen> {
   LocalDatabase localDatabase = LocalDatabase();
 
+  Widget _buildQuantity(ShopDetailProvider shopDetailProvider) {
+    return Row(
+      children: [
+        const Text(
+          'Quantity',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        const SizedBox(width: 20),
+        Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(24)),
+            color: Color(0xFFF3F3F3),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: Material(
+            color: Colors.transparent,
+            child: Row(
+              children: [
+                InkWell(
+                  child: const Icon(Icons.remove),
+                  onTap: () {
+                    if (shopDetailProvider.quantity <= 0) return;
+                    shopDetailProvider.updateQuantity(
+                      shopDetailProvider.quantity - 1,
+                    );
+                  },
+                ),
+                const SizedBox(width: 20),
+                Text(
+                  '${shopDetailProvider.quantity}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(width: 20),
+                InkWell(
+                  child: const Icon(Icons.add),
+                  onTap: () => shopDetailProvider.updateQuantity(
+                    shopDetailProvider.quantity + 1,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ShopDetailProvider>(
@@ -82,6 +135,8 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                                   const Divider(color: Color(0xFFEEEEEE)),
                                   const SizedBox(height: 15),
                                   ...buildDescription(product.description),
+                                  const SizedBox(height: 15),
+                                  _buildQuantity(shopDetailProvider),
                                   SizedBox(height: 125.sp),
                                 ],
                               ),
@@ -116,11 +171,11 @@ class ShopDetailProvider extends ChangeNotifier {
 
   bool _isCollected = false;
   ProductModel? _product;
+  int _quantity = 0;
 
   Future<ProductModel> loadProductDetails(int productId) async {
     try {
-      _product =
-          await productService.methodGetProductById(productId: productId);
+      _product = await productService.methodGetProductById(productId: productId);
       notifyListeners();
       return _product!;
     } catch (e) {
@@ -145,8 +200,13 @@ class ShopDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateQuantity(int newQuantity) {
+    _quantity = newQuantity;
+    notifyListeners();
+  }
+
   void addToCart() {
-    localDatabase.saveData(product);
+    localDatabase.saveData(product: product, quantity: _quantity == 0 ? 1 : _quantity);
     notifyListeners();
   }
 
@@ -155,4 +215,6 @@ class ShopDetailProvider extends ChangeNotifier {
   ProductModel get product => _product!;
 
   double get productPrice => _product?.price.toDouble() ?? 0.0;
+
+  int get quantity => _quantity;
 }
