@@ -20,6 +20,7 @@ class _PaymentScreenState extends State<PaymentScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _rotationAnimation;
+  bool isInitial = false;
 
   @override
   void initState() {
@@ -50,152 +51,161 @@ class _PaymentScreenState extends State<PaymentScreen>
           ),
           actions: [
             Consumer<PaymentProvider>(
-              builder: (context, paymentProvider, child) {
-                if (paymentProvider.hasCreditCard) {
-                  return IconButton(
-                    onPressed: () {
-                      paymentProvider.toggleEditButton();
-                    },
-                    icon: Image(
-                      height: 35.sp,
-                      width: 35.sp,
-                      image: const AssetImage(
-                        "assets/icons/profile/edit_credit_card.png",
-                      ),
+              builder: (_, paymentProvider, __) {
+                return paymentProvider.isInitial == true ? IconButton(
+                  onPressed: () {
+                    paymentProvider.toggleEditButton();
+                  },
+                  icon: Image(
+                    height: 35.sp,
+                    width: 35.sp,
+                    image: const AssetImage(
+                      "assets/icons/profile/edit_credit_card.png",
                     ),
-                  );
-                } else {
-                  return SizedBox(width: 8.sp);
-                }
+                  ),
+                ) : const SizedBox.shrink();
               },
             ),
           ],
         ),
         body: Consumer<PaymentProvider>(
           builder: (context, paymentProvider, child) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: Column(
-                children: [
-                  const SizedBox(height: 30),
-                  paymentProvider.isEditButtonPressed == false
-                      ? AnimatedBuilder(
-                          animation: _rotationAnimation,
-                          builder: (context, child) {
-                            return Transform(
-                              transform: Matrix4.rotationY(
-                                2 * _rotationAnimation.value * pi,
-                              ),
-                              alignment: Alignment.center,
-                              child: FutureBuilder<Map<String, String>?>(
-                                future: CardDatabase.getCreditCard(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return ShowCreditCard(
-                                      cardNumber: paymentProvider.cardNumber,
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 30),
+                    AnimatedBuilder(
+                      animation: _rotationAnimation,
+                      builder: (context, child) {
+                        return Transform(
+                          transform: Matrix4.rotationY(
+                            2 * _rotationAnimation.value * pi,
+                          ),
+                          alignment: Alignment.center,
+                          child: FutureBuilder<Map<String, String>?>(
+                            future: CardDatabase.getCreditCard(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return ShowCreditCard(
+                                  cardNumber: paymentProvider.cardNumber,
+                                  cardHolderName: paymentProvider.cardHolder,
+                                );
+                              }
+
+                              if (snapshot.hasData) {
+                                return Column(
+                                  children: [
+                                    ShowCreditCard(
+                                      cardNumber:
+                                          snapshot.data!['cardNumber'] ??
+                                              'No Data',
                                       cardHolderName:
-                                          paymentProvider.cardHolder,
-                                    );
-                                  }
+                                          snapshot.data!['cardHolder'] ??
+                                              'No Data',
+                                    ),
+                                    const SizedBox(height: 30),
+                                    paymentProvider.isEditButtonPressed == true
+                                        ? Column(
+                                            children: [
+                                              buildCardInputs(
+                                                context: context,
+                                                cardNumberController:
+                                                    paymentProvider
+                                                        .cardNumberController,
+                                                cardHolderNameController:
+                                                    paymentProvider
+                                                        .cardHolderNameController,
+                                              ),
+                                              const SizedBox(height: 20),
+                                              buildSaveButton(
+                                                onTap: () {
+                                                  paymentProvider.cardNumber =
+                                                      paymentProvider
+                                                          .cardNumberController
+                                                          .text;
+                                                  paymentProvider.cardHolder =
+                                                      paymentProvider
+                                                          .cardHolderNameController
+                                                          .text;
 
-                                  if (snapshot.hasData) {
-                                    return Column(
-                                      children: [
-                                        ShowCreditCard(
-                                          cardNumber:
-                                              snapshot.data!['cardNumber'] ??
-                                                  'No Data',
-                                          cardHolderName:
-                                              snapshot.data!['cardHolder'] ??
-                                                  'No Data',
-                                        ),
-                                        const SizedBox(height: 30),
-                                        Text(
-                                          "Or with Cash On Delivery",
-                                          style: TextStyle(
-                                            fontSize: 20.sp,
-                                            color: Colors.deepPurple.shade700,
-                                            fontWeight: FontWeight.w800,
-                                          ),
-                                        ),
-                                        SizedBox(height: 40.sp),
-                                        Image(
-                                          height: 250.sp,
-                                          image: const AssetImage(
-                                            "assets/images/cash-on-delivery.png",
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  } else {
-                                    return Column(
-                                      children: [
-                                        buildCardInputs(
-                                          context: context,
-                                          cardNumberController: paymentProvider
-                                              .cardNumberController,
-                                          cardHolderNameController:
-                                              paymentProvider
-                                                  .cardHolderNameController,
-                                        ),
+                                                  _controller
+                                                      .forward(from: 0)
+                                                      .whenComplete(
+                                                    () {
+                                                      paymentProvider
+                                                          .addCreditCard();
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          )
+                                        : const SizedBox.shrink(),
+                                    const SizedBox(height: 20),
+                                    Text(
+                                      "Or with Cash On Delivery",
+                                      style: TextStyle(
+                                        fontSize: 20.sp,
+                                        color: Colors.deepPurple.shade700,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    SizedBox(height: 40.sp),
+                                    Image(
+                                      height: 250.sp,
+                                      image: const AssetImage(
+                                        "assets/images/cash-on-delivery.png",
+                                      ),
+                                    ),
+                                    const SizedBox(height: 35),
+                                  ],
+                                );
+                              } else {
+                                return Column(
+                                  children: [
+                                    buildCardInputs(
+                                      context: context,
+                                      cardNumberController:
+                                          paymentProvider.cardNumberController,
+                                      cardHolderNameController: paymentProvider
+                                          .cardHolderNameController,
+                                    ),
 
-                                        SizedBox(height: 40.sp),
+                                    SizedBox(height: 40.sp),
 
-                                        /// #Save Button
-                                        buildSaveButton(
-                                          onTap: () {
-                                            paymentProvider.cardNumber =
-                                                paymentProvider
-                                                    .cardNumberController.text;
-                                            paymentProvider.cardHolder =
-                                                paymentProvider
-                                                    .cardHolderNameController
-                                                    .text;
+                                    /// #Save Button
+                                    buildSaveButton(
+                                      onTap: () {
+                                        paymentProvider.cardNumber =
+                                            paymentProvider
+                                                .cardNumberController.text;
+                                        paymentProvider.cardHolder =
+                                            paymentProvider
+                                                .cardHolderNameController.text;
 
-                                            _controller
-                                                .forward(from: 0)
-                                                .whenComplete(() {
-                                              paymentProvider.addCreditCard();
-                                            });
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                },
-                              ),
-                            );
-                          },
-                        )
-                      : Column(
-                          children: [
-                            buildCardInputs(
-                              context: context,
-                              cardNumberController:
-                                  paymentProvider.cardNumberController,
-                              cardHolderNameController:
-                                  paymentProvider.cardHolderNameController,
-                            ),
+                                        _controller
+                                            .forward(from: 0)
+                                            .whenComplete(() {
+                                          paymentProvider.addCreditCard();
+                                        });
 
-                            SizedBox(height: 40.sp),
-
-                            /// #Save Button
-                            buildSaveButton(
-                              onTap: () async {
-                                if (paymentProvider.isEditButtonPressed) {
-                                  paymentProvider.cardNumber =
-                                      paymentProvider.cardNumberController.text;
-                                  paymentProvider.cardHolder = paymentProvider
-                                      .cardHolderNameController.text;
-
-                                  await paymentProvider.editCreditCard();
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                ],
+                                        paymentProvider.toggleInitial();
+                                        print("IS INITIAL : $isInitial");
+                                      },
+                                    ),
+                                  ],
+                                );
+                              }
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -207,12 +217,11 @@ class _PaymentScreenState extends State<PaymentScreen>
 
 class PaymentProvider extends ChangeNotifier {
   bool _isEditButtonPressed = false;
+  bool _isInitial = false;
 
   bool get isEditButtonPressed => _isEditButtonPressed;
 
-  bool _hasCreditCard = false;
-
-  bool get hasCreditCard => _hasCreditCard;
+  bool get isInitial => _isInitial;
 
   final TextEditingController _cardNumberController = TextEditingController();
 
@@ -248,26 +257,18 @@ class PaymentProvider extends ChangeNotifier {
   }
 
   Future<void> addCreditCard() async {
-    _hasCreditCard = true;
     await CardDatabase.saveCreditCard(_cardHolder, _cardNumber);
-    notifyListeners();
-  }
-
-  Future<void> editCreditCard() async {
-    Map<String, String>? existingCard = await CardDatabase.getCreditCard();
-
-    if (existingCard != null) {
-      cardNumber = existingCard['cardNumber'] ?? '';
-      cardHolder = existingCard['cardHolder'] ?? '';
-    }
-
-    await CardDatabase.saveCreditCard(cardHolder, cardNumber);
-
+    _isEditButtonPressed = false;
     notifyListeners();
   }
 
   void toggleEditButton() {
     _isEditButtonPressed = !_isEditButtonPressed;
+    notifyListeners();
+  }
+
+  void toggleInitial() {
+    _isInitial = true;
     notifyListeners();
   }
 }

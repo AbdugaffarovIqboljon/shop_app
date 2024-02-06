@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/screens/profile_screen/profile_screen_views/textfield_card_inputs.dart';
 import 'package:shop_app/utils.dart';
 
 Container buildCardInputs({
@@ -31,38 +32,19 @@ Container buildCardInputs({
             ),
           ),
           SizedBox(height: 15.sp),
-          TextField(
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.number,
-            controller: cardNumberController,
-            maxLength: 19,
-            onChanged: (input) {
+          textFieldCardInputs(
+            cardNumberController,
+            TextInputAction.next,
+            TextInputType.number,
+            "0000 0000 0000 0000",
+            19,
+            (input) {
               if (input.length == 19) {
                 FocusScope.of(context).nextFocus();
               }
             },
-            inputFormatters: [CardNumberFormatter()],
-            style: TextStyle(
-              fontSize: 20.sp,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-            decoration: InputDecoration(
-              hintText: '0000 0000 0000 0000',
-              hintStyle: TextStyle(
-                fontSize: 18.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-              counter: const SizedBox.shrink(),
-              border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-            ),
+            [CardNumberFormatter()],
           ),
-          SizedBox(height: 15.sp),
           Text(
             'Your Name: ',
             style: TextStyle(
@@ -72,28 +54,11 @@ Container buildCardInputs({
             ),
           ),
           SizedBox(height: 15.sp),
-          TextField(
-            textInputAction: TextInputAction.done,
-            keyboardType: TextInputType.name,
-            controller: cardHolderNameController,
-            style: TextStyle(
-              fontSize: 20.sp,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-            decoration: InputDecoration(
-              hintText: 'CARDHOLDER NAME',
-              hintStyle: TextStyle(
-                fontSize: 18.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-              border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-            ),
+          textFieldCardInputs(
+            cardHolderNameController,
+            TextInputAction.done,
+            TextInputType.name,
+            'CARDHOLDER NAME',
           ),
         ],
       ),
