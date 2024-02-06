@@ -130,7 +130,6 @@ class _ProductCardState extends State<ProductCard> {
                           product: widget.product,
                           quantity: quantity,
                         );
-                        print("Quantity: $quantity");
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             duration: const Duration(milliseconds: 600),

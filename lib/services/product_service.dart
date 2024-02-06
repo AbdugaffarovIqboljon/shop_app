@@ -22,7 +22,7 @@ class LocalDatabase {
         savedItems.indexWhere((item) => item['id'] == product.id);
 
     if (existingIndex != -1) {
-      savedItems[existingIndex]['quantity'] = quantity;
+      savedItems[existingIndex]['quantity'] += quantity;
     } else {
       savedItems.add({
         ...product.toJson(),

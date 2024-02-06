@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/model/product_model.dart';
-import 'package:shop_app/screens/cart_screen/cart_screen.dart';
 import 'package:shop_app/services/product_service.dart';
+
+import '../cart_screen/cart_screen.dart';
 
 class SavedProductsScreen extends StatelessWidget {
   const SavedProductsScreen({Key? key}) : super(key: key);
@@ -60,9 +61,8 @@ class SavedProductsScreen extends StatelessWidget {
                     child: ListTile(
                       splashColor: Colors.transparent,
                       onTap: () {
-                        CartProvider().toggleProductSelection(
-                          product: likedProduct,
-                        );
+                        CartProvider()
+                            .toggleProductSelection(product: likedProduct);
                       },
                       minLeadingWidth: 50.sp,
                       leading: Image(

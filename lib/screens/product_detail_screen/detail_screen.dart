@@ -175,7 +175,8 @@ class ShopDetailProvider extends ChangeNotifier {
 
   Future<ProductModel> loadProductDetails(int productId) async {
     try {
-      _product = await productService.methodGetProductById(productId: productId);
+      _product =
+          await productService.methodGetProductById(productId: productId);
       notifyListeners();
       return _product!;
     } catch (e) {
@@ -206,7 +207,10 @@ class ShopDetailProvider extends ChangeNotifier {
   }
 
   void addToCart() {
-    localDatabase.saveData(product: product, quantity: _quantity == 0 ? 1 : _quantity);
+    localDatabase.saveData(
+      product: product,
+      quantity: _quantity == 0 ? 1 : _quantity,
+    );
     notifyListeners();
   }
 

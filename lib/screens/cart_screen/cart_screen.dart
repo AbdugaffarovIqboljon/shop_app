@@ -45,11 +45,9 @@ class _CartScreenState extends State<_CartScreenContent> {
       body: FutureBuilder<List<ProductModel>>(
         future: localDatabase.getSavedItems(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          } else if (snapshot.hasError) {
+          if (snapshot.hasError) {
             print("ERROR: ${snapshot.error}");
-            return Text("Error: ${snapshot.error}");
+            return const Text("Some Error has gone \nTry Again later:(");
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return buildEmptyCart();
           } else {
@@ -72,8 +70,10 @@ class _CartScreenState extends State<_CartScreenContent> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.deepPurpleAccent,
         onPressed: () {
-          final cartProvider =
-              Provider.of<CartProvider>(context, listen: false);
+          final cartProvider = Provider.of<CartProvider>(
+            context,
+            listen: false,
+          );
           if (cartProvider.selectedProducts.isEmpty) return;
           showAlertDialog(context);
         },
@@ -90,9 +90,7 @@ class CartProvider extends ChangeNotifier {
   List<ProductModel> selectedProducts = [];
   LocalDatabase localDatabase = LocalDatabase();
 
-  void toggleProductSelection({
-    required ProductModel product,
-  }) {
+  void toggleProductSelection({required ProductModel product}) {
     if (selectedProducts.contains(product)) {
       selectedProducts.remove(product);
     } else {
@@ -103,7 +101,6 @@ class CartProvider extends ChangeNotifier {
 
   Future<void> removeItems(ProductModel product) async {
     localDatabase.removeItem(product);
-    selectedProducts.remove(product);
     notifyListeners();
   }
 }

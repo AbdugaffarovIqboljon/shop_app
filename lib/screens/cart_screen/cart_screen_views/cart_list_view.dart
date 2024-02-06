@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/screens/product_detail_screen/detail_screen.dart';
 import 'package:shop_app/services/product_service.dart';
 
 import '../../../model/product_model.dart';
@@ -21,7 +22,7 @@ Widget buildListView(
       final isSelected = cartProvider.selectedProducts.contains(product);
       LocalDatabase localDatabase = LocalDatabase();
       return Container(
-        height: 120.sp,
+        height: 110.sp,
         margin: const EdgeInsets.symmetric(vertical: 8),
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
@@ -33,15 +34,27 @@ Widget buildListView(
         ),
         child: Center(
           child: ListTile(
+            selected: isSelected,
+            tileColor: isSelected ? Colors.grey.shade100 : Colors.transparent,
             splashColor: Colors.transparent,
             onTap: () {
               cartProvider.toggleProductSelection(product: product);
             },
             minLeadingWidth: 50.sp,
-            leading: Image(
-              height: 80.sp,
-              width: 80.sp,
-              image: NetworkImage(product.image),
+            leading: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShopDetailScreen(productId: product.id),
+                  ),
+                );
+              },
+              child: Image(
+                height: 80.sp,
+                width: 80.sp,
+                image: NetworkImage(product.image),
+              ),
             ),
             title: Text(
               product.title,
@@ -65,10 +78,8 @@ Widget buildListView(
                 FutureBuilder<int>(
                   future: localDatabase.getProductQuantity(product.id),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Text("Error: ${snapshot.error}");
+                    if (snapshot.hasError) {
+                      return const Text("No Data :(");
                     } else {
                       int quantity = snapshot.data ?? 0;
                       return Text(
