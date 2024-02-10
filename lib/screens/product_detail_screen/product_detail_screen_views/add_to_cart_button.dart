@@ -3,42 +3,42 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Widget addToCartButton(double price, void Function() onTap) {
   buildAddCard() => Container(
-    height: 58.sp,
-    width: 160.sp,
-    decoration: BoxDecoration(
-      borderRadius: const BorderRadius.all(Radius.circular(30)),
-      color: Colors.deepPurpleAccent.shade700,
-      boxShadow: [
-        BoxShadow(
-          offset: const Offset(4, 6),
-          blurRadius: 15,
-          color: Colors.deepPurpleAccent.withOpacity(0.5),
-        ),
-      ],
-    ),
-    child: Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: const BorderRadius.all(Radius.circular(29)),
-        onTap: onTap,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('assets/icons/detail/bag@2x.png', scale: 2),
-            const SizedBox(width: 16),
-            const Text(
-              'Add to Cart',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: Colors.white,
-              ),
+        height: 58.sp,
+        width: 160.sp,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(30)),
+          color: Colors.deepPurpleAccent.shade700,
+          boxShadow: [
+            BoxShadow(
+              offset: const Offset(4, 6),
+              blurRadius: 15,
+              color: Colors.deepPurpleAccent.withOpacity(0.5),
             ),
           ],
         ),
-      ),
-    ),
-  );
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: const BorderRadius.all(Radius.circular(29)),
+            onTap: onTap,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset('assets/icons/detail/bag@2x.png', scale: 2),
+                const SizedBox(width: 16),
+                const Text(
+                  'Add to Cart',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
 
   return Positioned(
     bottom: 0,

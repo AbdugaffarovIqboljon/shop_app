@@ -26,7 +26,7 @@ class SecurityScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Security Measures for Shop App',
+                'Security Measures for QuickBuy Store',
                 style: TextStyle(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
@@ -34,7 +34,7 @@ class SecurityScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'At Shop App, we prioritize the security and privacy of your information. We have implemented robust security measures to ensure a safe and secure shopping experience for all our users.',
+                'At QuickBuy Store, we prioritize the security and privacy of your information. We have implemented robust security measures to ensure a safe and secure shopping experience for all our users.',
                 style: TextStyle(fontSize: 16.sp),
               ),
               const SizedBox(height: 16),
@@ -52,7 +52,7 @@ class SecurityScreen extends StatelessWidget {
               ),
               _buildSecurityFeature(
                 '2. Account Protection:',
-                'Your Shop App account is protected by advanced authentication mechanisms, including password policies and multi-factor authentication, to prevent unauthorized access.',
+                'Your QuickBuy Store account is protected by advanced authentication mechanisms, including password policies and multi-factor authentication, to prevent unauthorized access.',
               ),
               _buildSecurityFeature(
                 '3. Payment Security:',
@@ -78,7 +78,10 @@ class SecurityScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSecurityFeature(String title, String description) {
+  Widget _buildSecurityFeature(
+    String title,
+    String description,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(

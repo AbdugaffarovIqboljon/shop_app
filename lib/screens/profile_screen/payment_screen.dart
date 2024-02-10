@@ -20,7 +20,6 @@ class _PaymentScreenState extends State<PaymentScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _rotationAnimation;
-  bool isInitial = false;
 
   @override
   void initState() {
@@ -49,24 +48,6 @@ class _PaymentScreenState extends State<PaymentScreen>
               fontWeight: FontWeight.bold,
             ),
           ),
-          actions: [
-            Consumer<PaymentProvider>(
-              builder: (_, paymentProvider, __) {
-                return paymentProvider.isInitial == true ? IconButton(
-                  onPressed: () {
-                    paymentProvider.toggleEditButton();
-                  },
-                  icon: Image(
-                    height: 35.sp,
-                    width: 35.sp,
-                    image: const AssetImage(
-                      "assets/icons/profile/edit_credit_card.png",
-                    ),
-                  ),
-                ) : const SizedBox.shrink();
-              },
-            ),
-          ],
         ),
         body: Consumer<PaymentProvider>(
           builder: (context, paymentProvider, child) {
@@ -92,6 +73,7 @@ class _PaymentScreenState extends State<PaymentScreen>
                                 return ShowCreditCard(
                                   cardNumber: paymentProvider.cardNumber,
                                   cardHolderName: paymentProvider.cardHolder,
+                                  onPressed: () {},
                                 );
                               }
 
@@ -105,6 +87,9 @@ class _PaymentScreenState extends State<PaymentScreen>
                                       cardHolderName:
                                           snapshot.data!['cardHolder'] ??
                                               'No Data',
+                                      onPressed: () {
+                                        paymentProvider.toggleEditButton();
+                                      },
                                     ),
                                     const SizedBox(height: 30),
                                     paymentProvider.isEditButtonPressed == true
@@ -131,14 +116,23 @@ class _PaymentScreenState extends State<PaymentScreen>
                                                           .cardHolderNameController
                                                           .text;
 
-                                                  _controller
-                                                      .forward(from: 0)
-                                                      .whenComplete(
-                                                    () {
-                                                      paymentProvider
-                                                          .addCreditCard();
-                                                    },
-                                                  );
+                                                  paymentProvider
+                                                              .cardHolderNameController
+                                                              .text
+                                                              .isNotEmpty &&
+                                                          paymentProvider
+                                                              .cardNumberController
+                                                              .text
+                                                              .isNotEmpty
+                                                      ? _controller
+                                                          .forward(from: 0)
+                                                          .whenComplete(
+                                                          () {
+                                                            paymentProvider
+                                                                .addCreditCard();
+                                                          },
+                                                        )
+                                                      : null;
                                                 },
                                               ),
                                             ],
@@ -176,7 +170,7 @@ class _PaymentScreenState extends State<PaymentScreen>
 
                                     SizedBox(height: 40.sp),
 
-                                    /// #Save Button
+                                    /// #Save Initial Button
                                     buildSaveButton(
                                       onTap: () {
                                         paymentProvider.cardNumber =
@@ -191,9 +185,6 @@ class _PaymentScreenState extends State<PaymentScreen>
                                             .whenComplete(() {
                                           paymentProvider.addCreditCard();
                                         });
-
-                                        paymentProvider.toggleInitial();
-                                        print("IS INITIAL : $isInitial");
                                       },
                                     ),
                                   ],
@@ -217,11 +208,8 @@ class _PaymentScreenState extends State<PaymentScreen>
 
 class PaymentProvider extends ChangeNotifier {
   bool _isEditButtonPressed = false;
-  bool _isInitial = false;
 
   bool get isEditButtonPressed => _isEditButtonPressed;
-
-  bool get isInitial => _isInitial;
 
   final TextEditingController _cardNumberController = TextEditingController();
 
@@ -264,11 +252,6 @@ class PaymentProvider extends ChangeNotifier {
 
   void toggleEditButton() {
     _isEditButtonPressed = !_isEditButtonPressed;
-    notifyListeners();
-  }
-
-  void toggleInitial() {
-    _isInitial = true;
     notifyListeners();
   }
 }

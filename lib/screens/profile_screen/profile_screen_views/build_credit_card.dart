@@ -4,11 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ShowCreditCard extends StatelessWidget {
   final String cardNumber;
   final String cardHolderName;
+  final void Function()? onPressed;
 
   const ShowCreditCard({
     super.key,
     required this.cardNumber,
     required this.cardHolderName,
+    required this.onPressed,
   });
 
   @override
@@ -27,9 +29,27 @@ class ShowCreditCard extends StatelessWidget {
             height: 215.sp,
           ),
         ),
+        Transform.translate(
+          offset: Offset(340.sp, -6.sp),
+          child: Row(
+            children: [
+              IconButton(
+                onPressed: onPressed,
+                icon: Image(
+                  height: 25.sp,
+                  width: 25.sp,
+                  color: Colors.white,
+                  image: const AssetImage(
+                    "assets/icons/profile/edit.png",
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         Positioned(
-          height: 100,
-          left: 20,
+          height: 110,
+          left: 25,
           child: Row(
             children: [
               Image(
@@ -46,7 +66,7 @@ class ShowCreditCard extends StatelessWidget {
                   "assets/icons/profile/nfc.png",
                 ),
               ),
-              SizedBox(width: 135.sp),
+              SizedBox(width: 110.sp),
               Text(
                 'Credit Card',
                 style: TextStyle(

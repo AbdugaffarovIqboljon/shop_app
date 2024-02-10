@@ -17,7 +17,7 @@ void showAlertDialog(
             Lottie.asset("assets/lotties/delivery_lottie.json"),
             SizedBox(height: 30.sp),
             Text(
-              "Your order will be delivered in 1-2 days. Track your order in Orders Screen",
+              "Your order will be delivered in 1-2 days :)",
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 17.sp,

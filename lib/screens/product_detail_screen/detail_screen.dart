@@ -211,6 +211,7 @@ class ShopDetailProvider extends ChangeNotifier {
       product: product,
       quantity: _quantity == 0 ? 1 : _quantity,
     );
+    _quantity = 0;
     notifyListeners();
   }
 

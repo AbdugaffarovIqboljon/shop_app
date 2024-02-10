@@ -24,7 +24,7 @@ class AboutUsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Welcome to Shop App!',
+                'Welcome to QuickBuy Store!',
                 style: TextStyle(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
@@ -32,7 +32,7 @@ class AboutUsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'At Shop App, we are passionate about providing an exceptional online shopping experience. Our mission is to offer a diverse range of high-quality products while ensuring a seamless and secure shopping journey for our customers.',
+                'At QuickBuy Store, we are passionate about providing an exceptional online shopping experience. Our mission is to offer a diverse range of high-quality products while ensuring a seamless and secure shopping journey for our customers.',
                 style: TextStyle(fontSize: 16.sp),
               ),
               const SizedBox(height: 16),
@@ -62,7 +62,7 @@ class AboutUsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Thank you for choosing Shop App. We appreciate your trust and look forward to serving you with the best in online shopping!',
+                'Thank you for choosing QuickBuy Store. We appreciate your trust and look forward to serving you with the best in online shopping!',
                 style: TextStyle(fontSize: 16.sp),
               ),
             ],
