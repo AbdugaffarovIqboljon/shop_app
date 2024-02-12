@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-abstract class FRAppBar {
+abstract class BasicAppBar {
   static PreferredSizeWidget defaultAppBar(
     BuildContext context, {
     String title = '',

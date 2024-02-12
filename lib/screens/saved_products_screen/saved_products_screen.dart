@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/model/product_model.dart';
-import 'package:shop_app/services/product_service.dart';
+import 'package:shop_app/services/product_database.dart';
 
-import '../cart_screen/cart_screen.dart';
+import '../../providers/cart_provider.dart';
 
 class SavedProductsScreen extends StatelessWidget {
   const SavedProductsScreen({Key? key}) : super(key: key);

@@ -1,62 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/data/network_service.dart';
-import 'package:shop_app/model/special_offer.dart';
-import 'package:shop_app/screens/special_offers_screen/special_offers_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/special_offers_provider.dart';
 
 import '../../../components/special_offer_widget.dart';
-import '../../../model/product_model.dart';
 
-typedef SpecialOffersOnTapSeeAll = void Function();
-
-class SpecialOffers extends StatefulWidget {
-  const SpecialOffers({super.key});
-
-  @override
-  State<SpecialOffers> createState() => _SpecialOffersState();
-}
-
-class _SpecialOffersState extends State<SpecialOffers> {
-  late final List<SpecialOffer> specials = homeSpecialOffers;
-  int selectIndex = 0;
-
-  final NetworkService productService = NetworkService();
-  List<ProductModel> productList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    fetchData();
-  }
-
-  void navigateToSpecialOfferScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const SpecialOfferScreen()),
-    );
-  }
-
-  Future<void> fetchData() async {
-    try {
-      List<ProductModel> fetchedProducts =
-          await productService.methodGetAllProducts();
-      setState(() {
-        productList = fetchedProducts;
-      });
-    } catch (e) {
-      print('Error fetching data: $e');
-    }
-  }
+class SpecialOffers extends StatelessWidget {
+  const SpecialOffers({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<SpecialOffersProvider>(context);
+
     return Column(
       children: [
         const SizedBox(height: 10),
         Stack(
           children: [
             InkWell(
-              onTap: navigateToSpecialOfferScreen,
+              onTap: () {
+                provider.navigateToSpecialOfferScreen(context);
+              },
               child: Container(
                 clipBehavior: Clip.antiAlias,
                 height: 200.sp,
@@ -76,8 +40,8 @@ class _SpecialOffersState extends State<SpecialOffers> {
                 ),
                 child: PageView.builder(
                   itemBuilder: (context, index) {
-                    final data = specials[index];
-                    final product = productList[index];
+                    final data = provider.specials[index];
+                    final product = provider.productList[index];
                     return SpecialOfferWidget(
                       context,
                       data: data,
@@ -85,28 +49,31 @@ class _SpecialOffersState extends State<SpecialOffers> {
                       productModel: product,
                     );
                   },
-                  itemCount: productList.length ~/ 4,
+                  itemCount: provider.productList.length ~/ 4,
                   allowImplicitScrolling: true,
                   onPageChanged: (value) {
-                    setState(() => selectIndex = value);
+                    // Update the state using the provider
+                    provider.setSelectIndex(value);
                   },
                 ),
               ),
             ),
-            _buildPageIndicator()
+            _buildPageIndicator(provider)
           ],
         ),
       ],
     );
   }
 
-  Widget _buildPageIndicator() {
+  Widget _buildPageIndicator(SpecialOffersProvider provider) {
     List<Widget> list = [];
-    for (int i = 0; i < productList.length ~/ 4; i++) {
-      list.add(i == selectIndex ? _indicator(true) : _indicator(false));
+    for (int i = 0; i < provider.productList.length ~/ 4; i++) {
+      list.add(
+        i == provider.selectIndex ? _indicator(true) : _indicator(false),
+      );
     }
     return Container(
-      height: 195.sp,
+      height: 195,
       alignment: Alignment.bottomCenter,
       padding: const EdgeInsets.only(bottom: 10),
       child: Row(
@@ -120,8 +87,8 @@ class _SpecialOffersState extends State<SpecialOffers> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
       margin: const EdgeInsets.symmetric(horizontal: 5.0),
-      height: 4.0.sp,
-      width: isActive ? 16.sp : 4.0.sp,
+      height: 4.0,
+      width: isActive ? 16.0 : 4.0,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(2)),
         color: isActive

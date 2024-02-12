@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/model/product_model.dart';
+import 'package:shop_app/providers/address_screen_provider.dart';
 import 'package:shop_app/screens/cart_screen/cart_screen_views/alert_dialog.dart';
 
-import '../../services/product_service.dart';
+import '../../providers/cart_provider.dart';
+import '../../services/product_database.dart';
 import 'cart_screen_views/cart_list_view.dart';
 import 'cart_screen_views/empty_cart_case.dart';
 
@@ -48,6 +50,10 @@ class _CartScreenState extends State<_CartScreenContent> {
           if (snapshot.hasError) {
             print("ERROR: ${snapshot.error}");
             return const Text("Some Error has gone \nTry Again later:(");
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return buildEmptyCart();
           } else {
@@ -75,7 +81,16 @@ class _CartScreenState extends State<_CartScreenContent> {
             listen: false,
           );
           if (cartProvider.selectedProducts.isEmpty) return;
-          showAlertDialog(context);
+          showAlertDialog(
+            context,
+            AddressProvider(),
+            () async {
+              await cartProvider.removeItems(
+                cartProvider.selectedProducts.first,
+              );
+              if (mounted) Navigator.of(context).pop();
+            },
+          );
         },
         child: const Icon(
           Icons.payment_outlined,
@@ -83,24 +98,5 @@ class _CartScreenState extends State<_CartScreenContent> {
         ),
       ),
     );
-  }
-}
-
-class CartProvider extends ChangeNotifier {
-  List<ProductModel> selectedProducts = [];
-  LocalDatabase localDatabase = LocalDatabase();
-
-  void toggleProductSelection({required ProductModel product}) {
-    if (selectedProducts.contains(product)) {
-      selectedProducts.remove(product);
-    } else {
-      selectedProducts.add(product);
-    }
-    notifyListeners();
-  }
-
-  Future<void> removeItems(ProductModel product) async {
-    localDatabase.removeItem(product);
-    notifyListeners();
   }
 }

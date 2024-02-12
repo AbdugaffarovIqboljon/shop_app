@@ -39,8 +39,14 @@ dependencies:
 
   #Shared_Preferences
   shared_preferences: ^2.2.2
+
+  #Yandex_Map
   yandex_mapkit: ^3.4.0
+
+  #Geolocator
   geolocator: ^10.1.0
+
+  #Geocoding
   geocoding: ^2.1.1
 
 

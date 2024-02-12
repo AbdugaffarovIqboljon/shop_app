@@ -1,57 +1,25 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
-import '../../../services/user_info_service.dart';
+import '../../../providers/user_info_appbar_provider.dart';
 
-class HomeAppBar extends StatefulWidget {
-  const HomeAppBar({super.key});
-
-  @override
-  State<HomeAppBar> createState() => _HomeAppBarState();
-}
-
-class _HomeAppBarState extends State<HomeAppBar> {
-  late StreamSubscription _streamSubscription;
-  late Map<String, String> _userData = {};
-
-  @override
-  void initState() {
-    super.initState();
-    _streamSubscription = UserInfoDatabase.userInfoStream.listen((userData) {
-      if (mounted) {
-        setState(() {
-          _userData = userData;
-        });
-      }
-    });
-
-    UserInfoDatabase.getUserInfo().then((userInfo) {
-      if (mounted && userInfo != null) {
-        setState(() {
-          _userData = userInfo;
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _streamSubscription.cancel();
-    super.dispose();
-  }
+class HomeAppBar extends StatelessWidget {
+  const HomeAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final userInfoProvider = Provider.of<UserInfoProvider>(context);
+    final userData = userInfoProvider.userData;
+
     return AppBar(
       elevation: 0,
       scrolledUnderElevation: 0,
       backgroundColor: Colors.white,
       clipBehavior: Clip.antiAlias,
       title: Text(
-        _userData['name']?.isNotEmpty == true
-            ? 'Hi, again ${_userData['name']} 👋'
+        userData['name']?.isNotEmpty == true
+            ? 'Hi, again ${userData['name']} 👋'
             : 'Hi, again 👋',
         style: TextStyle(
           fontWeight: FontWeight.w500,

@@ -3,11 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/payment_provider.dart';
 import 'package:shop_app/screens/profile_screen/profile_screen_views/build_credit_card.dart';
 import 'package:shop_app/screens/profile_screen/profile_screen_views/cart_inputs.dart';
 import 'package:shop_app/screens/profile_screen/profile_screen_views/save_button.dart';
 
-import '../../services/credit_card_service.dart';
+import '../../services/credit_card_database.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
@@ -203,55 +204,5 @@ class _PaymentScreenState extends State<PaymentScreen>
         ),
       ),
     );
-  }
-}
-
-class PaymentProvider extends ChangeNotifier {
-  bool _isEditButtonPressed = false;
-
-  bool get isEditButtonPressed => _isEditButtonPressed;
-
-  final TextEditingController _cardNumberController = TextEditingController();
-
-  TextEditingController get cardNumberController => _cardNumberController;
-
-  final TextEditingController _cardHolderNameController =
-      TextEditingController();
-
-  TextEditingController get cardHolderNameController =>
-      _cardHolderNameController;
-
-  String _cardNumber = '';
-
-  String get cardNumber => _cardNumber;
-
-  set cardNumber(String value) {
-    _cardNumber = value;
-    notifyListeners();
-  }
-
-  String _cardHolder = '';
-
-  String get cardHolder => _cardHolder;
-
-  set cardHolder(String value) {
-    _cardHolder = value;
-    notifyListeners();
-  }
-
-  set isEditButtonPressed(bool value) {
-    _isEditButtonPressed = value;
-    notifyListeners();
-  }
-
-  Future<void> addCreditCard() async {
-    await CardDatabase.saveCreditCard(_cardHolder, _cardNumber);
-    _isEditButtonPressed = false;
-    notifyListeners();
-  }
-
-  void toggleEditButton() {
-    _isEditButtonPressed = !_isEditButtonPressed;
-    notifyListeners();
   }
 }

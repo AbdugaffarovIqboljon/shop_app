@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/screens/profile_screen/profile_screen_views/save_button.dart';
 
-import '../../services/user_info_service.dart';
+import '../../services/user_database.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -73,18 +73,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         fontWeight: FontWeight.w500,
       ),
       decoration: InputDecoration(
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(18),
-            ),
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(18),
           ),
-          labelText: labelText,
-          hintText: hinText,
-          hintStyle: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w300,
-            color: Colors.black54,
-          )),
+        ),
+        labelText: labelText,
+        hintText: hinText,
+        hintStyle: TextStyle(
+          fontSize: 16.sp,
+          fontWeight: FontWeight.w300,
+          color: Colors.black54,
+        ),
+      ),
       maxLength: maxLength,
     );
   }

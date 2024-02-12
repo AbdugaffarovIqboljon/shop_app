@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../services/user_info_service.dart';
+import '../../../services/user_database.dart';
 
 class ProfileHeader extends StatefulWidget {
   const ProfileHeader({Key? key}) : super(key: key);

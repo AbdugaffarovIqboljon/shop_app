@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/model/product_model.dart';
-import 'package:shop_app/services/product_service.dart';
+import 'package:shop_app/services/product_database.dart';
 
 class ProductCard extends StatefulWidget {
   final BorderRadius borderRadius;
@@ -130,6 +130,7 @@ class _ProductCardState extends State<ProductCard> {
                           product: widget.product,
                           quantity: quantity,
                         );
+                        quantity = 0;
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             duration: const Duration(milliseconds: 600),

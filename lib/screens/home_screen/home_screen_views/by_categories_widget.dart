@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../data/network_service.dart';
 import '../../../model/category.dart';
-import '../../../model/product_model.dart';
 
 class ByCategoriesWidget extends StatefulWidget {
   final Function(int) onCategorySelected;
@@ -16,20 +14,6 @@ class ByCategoriesWidget extends StatefulWidget {
 
 class _ByCategoriesWidgetState extends State<ByCategoriesWidget> {
   int selectIndex = 0;
-  final NetworkService productService = NetworkService();
-  List<ProductModel> productList = [];
-
-  Future<void> fetchAllData() async {
-    try {
-      List<ProductModel> fetchedProducts =
-          await productService.methodGetAllProducts();
-      setState(() {
-        productList = fetchedProducts;
-      });
-    } catch (e) {
-      print('Error fetching data: $e');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

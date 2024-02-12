@@ -1,158 +1,98 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/address_screen_provider.dart';
+import 'package:shop_app/screens/profile_screen/profile_screen_views/build_map_section.dart';
+import 'package:shop_app/screens/profile_screen/profile_screen_views/build_saved_address_section.dart';
 import 'package:shop_app/screens/profile_screen/profile_screen_views/save_button.dart';
-import 'package:yandex_mapkit/yandex_mapkit.dart';
+import 'package:shop_app/utils.dart';
 
-class AddressScreen extends StatefulWidget {
-  const AddressScreen({super.key});
-
-  @override
-  State<AddressScreen> createState() => _AddressScreenState();
-}
-
-class _AddressScreenState extends State<AddressScreen> {
-  YandexMapController? mapController;
-  Position? position;
-  LocationPermission permission = LocationPermission.always;
-  List<PlacemarkMapObject> list = [
-    PlacemarkMapObject(
-      icon: PlacemarkIcon.single(
-        PlacemarkIconStyle(
-          image: BitmapDescriptor.fromAssetImage(
-            "assets/icons/profile/ic_marker.png",
-          ),
-          scale: 0.4,
-          isVisible: true,
-        ),
-      ),
-      mapId: const MapObjectId("1"),
-      point: const Point(
-        latitude: 37.78572997442163,
-        longitude: -122.40631317855258,
-      ),
-    ),
-
-  ];
+class AddressScreen extends StatelessWidget {
+  const AddressScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        title: Text(
-          "Address",
-          style: TextStyle(
-            fontSize: 22.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            flex: 8,
-            child: Stack(
-              alignment: Alignment(0.92.sp, 0.96.sp),
-              children: [
-                YandexMap(
-                  mode2DEnabled: true,
-                  mapType: MapType.map,
-                  nightModeEnabled: false,
-                  logoAlignment: const MapAlignment(
-                    horizontal: HorizontalAlignment.left,
-                    vertical: VerticalAlignment.bottom,
-                  ),
-                  mapObjects: list,
-                  onMapCreated: (YandexMapController controller) {
-                    mapController = controller;
-                  },
-                  onMapTap: (Point point) async {
-                    setState(() {
-                      list.add(
-                        PlacemarkMapObject(
-                          mapId: const MapObjectId('1'),
-                          point: Point(
-                            latitude: point.latitude,
-                            longitude: point.longitude,
-                          ),
-                        ),
-                      );
-                    });
-                    print("POINT LATITUDE: ${point.latitude}");
-                    print("POINT LONGTITUDE: ${point.longitude}");
-                  },
-                ),
-                IconButton(
-                  iconSize: 30.sp,
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.black87,
-                  ),
-                  onPressed: () {
-                    _getCurrentLocation();
-                  },
-                  icon: const Icon(
-                    Icons.my_location_outlined,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
+    return Consumer<AddressProvider>(
+      builder: (context, addressProvider, _) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            title: Text(
+              "Address",
+              style: TextStyle(
+                fontSize: 22.sp,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-          const SizedBox(height: 30),
-          buildSaveButton(
-            onTap: () {},
-          ),
-          const SizedBox(height: 100),
-        ],
-      ),
-    );
-  }
-
-  _getCurrentLocation() async {
-    await Geolocator.checkPermission();
-    await Geolocator.requestPermission();
-
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.best,
-    );
-
-    setState(() {
-      list.add(
-        PlacemarkMapObject(
-          mapId: const MapObjectId('1'),
-          point: Point(
-            latitude: position.latitude,
-            longitude: position.longitude,
-          ),
-        ),
-      );
-    });
-
-    await _moveToCurrentLocation(position);
-  }
-
-  Future<void> _moveToCurrentLocation(
-    Position position,
-  ) async {
-    await mapController!.moveCamera(
-      animation: const MapAnimation(
-        type: MapAnimationType.linear,
-        duration: 0.8,
-      ),
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: Point(
-            latitude: position.latitude,
-            longitude: position.longitude,
-          ),
-          zoom: 17,
-        ),
-      ),
+          body: addressProvider.isMapVisible
+              ? Column(
+                  children: [
+                    const SizedBox(height: 15),
+                    Expanded(
+                      flex: 6,
+                      child: buildMapSection(addressProvider),
+                    ),
+                    const SizedBox(height: 20),
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(18),
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FittedBox(
+                              child: Row(
+                                children: [
+                                  if (addressProvider.country != null &&
+                                      addressProvider.country!.isNotEmpty)
+                                    Text(
+                                      "${removeBrackets(addressProvider.country!)},",
+                                      style: TextStyle(
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    removeBrackets(addressProvider.street),
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 50.sp),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: buildSaveButton(
+                                onTap: () async {
+                                  addressProvider.saveAddressToDatabase();
+                                  addressProvider.toggleMapVisibility();
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 100),
+                  ],
+                )
+              : buildSavedAddressSection(addressProvider),
+        );
+      },
     );
   }
 }

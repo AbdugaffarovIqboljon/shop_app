@@ -1,57 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:shop_app/components/app_bar.dart';
 import 'package:shop_app/components/special_offer_widget.dart';
-import 'package:shop_app/data/network_service.dart';
+import 'package:shop_app/providers/special_offers_provider.dart';
 
-import '../../model/product_model.dart';
-import '../../model/special_offer.dart';
 import '../product_detail_screen/detail_screen.dart';
 
-class SpecialOfferScreen extends StatefulWidget {
-  const SpecialOfferScreen({super.key});
-
-  @override
-  State<SpecialOfferScreen> createState() => _SpecialOfferScreenState();
-
-  static String route() => '/special_offers';
-}
-
-class _SpecialOfferScreenState extends State<SpecialOfferScreen> {
-  late final List<SpecialOffer> datas = homeSpecialOffers;
-  final NetworkService productService = NetworkService();
-  List<ProductModel> productList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    fetchData();
-  }
-
-  Future<void> fetchData() async {
-    try {
-      List<ProductModel> fetchedProducts =
-          await productService.methodGetAllProducts();
-      setState(() {
-        productList = fetchedProducts;
-      });
-    } catch (e) {
-      print('Error fetching data: $e');
-    }
-  }
+class SpecialOfferScreen extends StatelessWidget {
+  const SpecialOfferScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<SpecialOffersProvider>(context);
+
     return Scaffold(
-      appBar: FRAppBar.defaultAppBar(
+      appBar: BasicAppBar.defaultAppBar(
         context,
         title: 'Special Offers',
       ),
       body: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 35),
         itemBuilder: (context, index) {
-          final data = datas[index];
-          final product = productList[index];
+          final data = provider.specials[index];
+          final product = provider.productList[index];
           return InkWell(
             onTap: () {
               Navigator.push(
@@ -78,7 +50,7 @@ class _SpecialOfferScreenState extends State<SpecialOfferScreen> {
             ),
           );
         },
-        itemCount: productList.length ~/ 4,
+        itemCount: provider.productList.length ~/ 4,
         separatorBuilder: (BuildContext context, int index) {
           return const SizedBox(height: 20);
         },

@@ -14,7 +14,8 @@ class NetworkService {
       final response = await _dio.get("$domain${Api.apiGETProducts}");
       if (response.statusCode == 200 || response.statusCode == 201) {
         final List<dynamic> jsonList = response.data as List<dynamic>;
-        final List<ProductModel> products = jsonList.map((json) => ProductModel.fromJson(json as Map<String, Object?>))
+        final List<ProductModel> products = jsonList
+            .map((json) => ProductModel.fromJson(json as Map<String, Object?>))
             .toList();
 
         return products;
@@ -65,7 +66,8 @@ class NetworkService {
         return products;
       } else {
         throw Exception(
-            'Failed to fetch products by category: ${response.statusCode}');
+          'Failed to fetch products by category: ${response.statusCode}',
+        );
       }
     } catch (e) {
       throw Exception('Failed to fetch products by category: $e');

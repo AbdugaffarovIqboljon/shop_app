@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shop_app/screens/main_home_screen.dart';
 import 'package:shop_app/screens/splash_screen/splash_screen.dart';
 
 class MyApp extends StatelessWidget {
@@ -19,7 +18,6 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Urbanist',
         ),
         themeMode: ThemeMode.light,
-        // routes: routes,
         home: const SplashScreen(),
       ),
     );

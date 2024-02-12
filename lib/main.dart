@@ -1,8 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/screens/cart_screen/cart_screen.dart';
-import 'package:shop_app/screens/product_detail_screen/detail_screen.dart';
-import 'package:shop_app/screens/profile_screen/payment_screen.dart';
+import 'package:shop_app/components/product_card.dart';
+import 'package:shop_app/providers/address_screen_provider.dart';
+import 'package:shop_app/providers/cart_provider.dart';
+import 'package:shop_app/providers/home_screen_provider.dart';
+import 'package:shop_app/providers/payment_provider.dart';
+import 'package:shop_app/providers/shop_detail_provider.dart';
+import 'package:shop_app/providers/special_offers_provider.dart';
+import 'package:shop_app/providers/user_info_appbar_provider.dart';
 
 import 'app.dart';
 
@@ -11,11 +16,16 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => PaymentProvider()),
+        ChangeNotifierProvider(create: (_) => HomeScreenProvider()),
+        ChangeNotifierProvider(create: (_) => UserInfoProvider()),
+        ChangeNotifierProvider(create: (_) => LikedProductsProvider()),
+        ChangeNotifierProvider(create: (_) => PaymentProvider()),
+        ChangeNotifierProvider(create: (_) => SpecialOffersProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => ShopDetailProvider()),
+        ChangeNotifierProvider(create: (_) => AddressProvider()),
       ],
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
 }
