@@ -8,7 +8,7 @@ import 'package:shop_app/screens/profile_screen/profile_screen_views/save_button
 import 'package:shop_app/utils.dart';
 
 class AddressScreen extends StatelessWidget {
-  const AddressScreen({Key? key}) : super(key: key);
+  const AddressScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

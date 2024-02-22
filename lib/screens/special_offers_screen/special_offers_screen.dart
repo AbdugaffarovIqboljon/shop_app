@@ -8,7 +8,7 @@ import 'package:shop_app/providers/special_offers_provider.dart';
 import '../product_detail_screen/detail_screen.dart';
 
 class SpecialOfferScreen extends StatelessWidget {
-  const SpecialOfferScreen({Key? key}) : super(key: key);
+  const SpecialOfferScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

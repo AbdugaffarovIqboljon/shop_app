@@ -92,7 +92,6 @@ class BottomNavBar extends StatelessWidget {
         fontWeight: FontWeight.w500,
         fontSize: 12,
       ),
-      // selectedItemColor: Colors.deepPurpleAccent,
       unselectedItemColor: const Color(0xFF9E9E9E),
     );
   }

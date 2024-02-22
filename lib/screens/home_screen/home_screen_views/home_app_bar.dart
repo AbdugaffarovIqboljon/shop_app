@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../providers/user_info_appbar_provider.dart';
 
 class HomeAppBar extends StatelessWidget {
-  const HomeAppBar({Key? key}) : super(key: key);
+  const HomeAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {

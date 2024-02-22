@@ -6,7 +6,7 @@ import 'package:shop_app/providers/special_offers_provider.dart';
 import '../../../components/special_offer_widget.dart';
 
 class SpecialOffers extends StatelessWidget {
-  const SpecialOffers({Key? key}) : super(key: key);
+  const SpecialOffers({super.key});
 
   @override
   Widget build(BuildContext context) {

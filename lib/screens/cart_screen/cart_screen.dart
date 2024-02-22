@@ -11,7 +11,7 @@ import 'cart_screen_views/cart_list_view.dart';
 import 'cart_screen_views/empty_cart_case.dart';
 
 class CartScreen extends StatelessWidget {
-  const CartScreen({Key? key}) : super(key: key);
+  const CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

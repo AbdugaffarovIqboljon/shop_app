@@ -6,7 +6,7 @@ import 'package:shop_app/services/product_database.dart';
 import '../../providers/cart_provider.dart';
 
 class SavedProductsScreen extends StatelessWidget {
-  const SavedProductsScreen({Key? key}) : super(key: key);
+  const SavedProductsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

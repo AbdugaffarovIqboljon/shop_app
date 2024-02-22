@@ -13,11 +13,11 @@ class SpecialOfferWidget extends StatefulWidget {
 
   const SpecialOfferWidget(
     this.context, {
-    Key? key,
+    super.key,
     required this.data,
     required this.index,
     required this.productModel,
-  }) : super(key: key);
+  });
 
   @override
   State<SpecialOfferWidget> createState() => _SpecialOfferWidgetState();

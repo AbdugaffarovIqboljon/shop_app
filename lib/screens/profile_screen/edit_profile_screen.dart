@@ -5,7 +5,7 @@ import 'package:shop_app/screens/profile_screen/profile_screen_views/save_button
 import '../../services/user_database.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({Key? key}) : super(key: key);
+  const EditProfileScreen({super.key});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
