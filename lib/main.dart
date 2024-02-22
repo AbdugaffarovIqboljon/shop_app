@@ -25,7 +25,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ShopDetailProvider()),
         ChangeNotifierProvider(create: (_) => AddressProvider()),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }

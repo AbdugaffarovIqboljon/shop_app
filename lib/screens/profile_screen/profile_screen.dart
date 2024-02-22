@@ -90,6 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: CustomScrollView(
         slivers: [
+          /// #Profile Header
           SliverList(
             delegate: SliverChildListDelegate.fixed([
               Padding(
@@ -98,6 +99,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ]),
           ),
+
+          /// #Body
           _buildBody(),
         ],
       ),

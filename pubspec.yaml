@@ -26,7 +26,7 @@ dependencies:
   dio: ^5.3.3
 
   #lottie_animation
-  lottie: ^2.7.0
+  lottie: ^3.1.0
 
   #cached_network_image
   cached_network_image: ^3.3.0
@@ -44,7 +44,7 @@ dependencies:
   yandex_mapkit: ^3.4.0
 
   #Geolocator
-  geolocator: ^10.1.0
+  geolocator: ^11.0.0
 
   #Geocoding
   geocoding: ^2.1.1
@@ -55,7 +55,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
 
 flutter:
 

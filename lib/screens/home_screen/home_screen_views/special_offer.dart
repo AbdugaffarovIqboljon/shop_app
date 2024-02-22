@@ -52,7 +52,6 @@ class SpecialOffers extends StatelessWidget {
                   itemCount: provider.productList.length ~/ 4,
                   allowImplicitScrolling: true,
                   onPageChanged: (value) {
-                    // Update the state using the provider
                     provider.setSelectIndex(value);
                   },
                 ),
@@ -73,9 +72,9 @@ class SpecialOffers extends StatelessWidget {
       );
     }
     return Container(
-      height: 195,
+      height: 195.sp,
       alignment: Alignment.bottomCenter,
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: EdgeInsets.only(bottom: 15.sp),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: list,

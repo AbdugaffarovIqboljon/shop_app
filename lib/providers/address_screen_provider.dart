@@ -82,8 +82,9 @@ class AddressProvider extends ChangeNotifier {
   }
 
   void updateAddressInfo(List<Placemark> placeMarks) {
-    country = placeMarks.map((e) => e.country).toString();
-    street = placeMarks.map((e) => e.street).toString();
+    country = placeMarks.map((e) => e.country).first;
+    street = placeMarks.map((e) => e.thoroughfare).first;
+    print("STREET : $street");
     notifyListeners();
   }
 
@@ -129,6 +130,7 @@ class AddressProvider extends ChangeNotifier {
       position.longitude,
     );
     updateAddressInfo(placeMarks);
+    print("PlaceMarks: ${placeMarks.toString()}");
     notifyListeners();
   }
 }

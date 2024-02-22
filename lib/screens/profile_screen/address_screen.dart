@@ -77,7 +77,7 @@ class AddressScreen extends StatelessWidget {
                             Align(
                               alignment: Alignment.bottomRight,
                               child: buildSaveButton(
-                                onTap: () async {
+                                onTap: () {
                                   addressProvider.saveAddressToDatabase();
                                   addressProvider.toggleMapVisibility();
                                 },

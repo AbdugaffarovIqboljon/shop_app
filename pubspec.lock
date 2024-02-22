@@ -101,10 +101,10 @@ packages:
     dependency: "direct main"
     description:
       name: dio
-      sha256: "797e1e341c3dd2f69f2dad42564a6feff3bfb87187d05abb93b9609e6f1645c3"
+      sha256: "49af28382aefc53562459104f64d16b9dfd1e8ef68c862d5af436cc8356ce5a8"
       url: "https://pub.dev"
     source: hosted
-    version: "5.4.0"
+    version: "5.4.1"
   equatable:
     dependency: transitive
     description:
@@ -170,10 +170,10 @@ packages:
     dependency: "direct dev"
     description:
       name: flutter_lints
-      sha256: a25a15ebbdfc33ab1cd26c63a6ee519df92338a9c10f122adda92938253bef04
+      sha256: e2a421b7e59244faef694ba7b30562e489c2b489866e505074eb005cd7060db7
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.3"
+    version: "3.0.1"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -204,42 +204,42 @@ packages:
     dependency: "direct main"
     description:
       name: geocoding
-      sha256: e1dc0ac56666d9ed1d5a9ae5543ce9eb5986db6209cc7600103487d09192059c
+      sha256: "06d053a67733d1b9b4267259713913bc2aa750f18b830f0869ff337a8cfa8325"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "2.2.0"
   geocoding_android:
     dependency: transitive
     description:
       name: geocoding_android
-      sha256: "609db1d71bc364dd9d0616f72a41c01e0c74f3a3807efb85e0d5a67e57baf50f"
+      sha256: "287a2009cb2c3d3dd2899ba8f3d3e38d9e06905ea429283859bfc3586d4f57fd"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.2"
+    version: "3.2.0"
   geocoding_ios:
     dependency: transitive
     description:
       name: geocoding_ios
-      sha256: "8f79e380abb640ef4d88baee8bb65390058c802601158d0813dc990b36b189d2"
+      sha256: "8a39bfb650af55209c42e564036a550b32d029e0733af01dc66c5afea50388d3"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "2.3.0"
   geocoding_platform_interface:
     dependency: transitive
     description:
       name: geocoding_platform_interface
-      sha256: "8848605d307d844d89937cdb4b8ad7dfa880552078f310fa24d8a460f6dddab4"
+      sha256: "8c2c8226e5c276594c2e18bfe88b19110ed770aeb7c1ab50ede570be8b92229b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "3.2.0"
   geolocator:
     dependency: "direct main"
     description:
       name: geolocator
-      sha256: e946395fc608842bb2f6c914807e9183f86f3cb787f6b8f832753e5251036f02
+      sha256: "694ec58afe97787b5b72b8a0ab78c1a9244811c3c10e72c4362ef3c0ceb005cd"
       url: "https://pub.dev"
     source: hosted
-    version: "10.1.0"
+    version: "11.0.0"
   geolocator_android:
     dependency: transitive
     description:
@@ -252,26 +252,26 @@ packages:
     dependency: transitive
     description:
       name: geolocator_apple
-      sha256: "79babf44b692ec5e789d322dc736ef71586056e8e6828f747c9e005456b248bf"
+      sha256: "2f2d4ee16c4df269e93c0e382be075cc01d5db6703c3196e4af20a634fe49ef4"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.5"
+    version: "2.3.6"
   geolocator_platform_interface:
     dependency: transitive
     description:
       name: geolocator_platform_interface
-      sha256: "3b95ecdc36462c47dbc535dcfedea774d03ccd1f3c9864e0a02ad088eeff4508"
+      sha256: "009a21c4bc2761e58dccf07c24f219adaebe0ff707abdfd40b0a763d4003fab9"
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.1"
+    version: "4.2.2"
   geolocator_web:
     dependency: transitive
     description:
       name: geolocator_web
-      sha256: "102e7da05b48ca6bf0a5bda0010f886b171d1a08059f01bfe02addd0175ebece"
+      sha256: "49d8f846ebeb5e2b6641fe477a7e97e5dd73f03cbfef3fd5c42177b7300fb0ed"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.1"
+    version: "3.0.0"
   geolocator_windows:
     dependency: transitive
     description:
@@ -300,26 +300,26 @@ packages:
     dependency: transitive
     description:
       name: js
-      sha256: "4186c61b32f99e60f011f7160e32c89a758ae9b1d0c6d28e2c02ef0382300e2b"
+      sha256: c1b2e9b5ea78c45e1a0788d29606ba27dc5f71f019f32ca5140f61ef071838cf
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.0"
+    version: "0.7.1"
   lints:
     dependency: transitive
     description:
       name: lints
-      sha256: "0a217c6c989d21039f1498c3ed9f3ed71b354e69873f13a8dfc3c9fe76f1b452"
+      sha256: cbf8d4b858bb0134ef3ef87841abdf8d63bfc255c266b7bf6b39daa1085c4290
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "3.0.0"
   lottie:
     dependency: "direct main"
     description:
       name: lottie
-      sha256: a93542cc2d60a7057255405f62252533f8e8956e7e06754955669fd32fb4b216
+      sha256: ce2bb2605753915080e4ee47f036a64228c88dc7f56f7bc1dbe912d75b55b1e2
       url: "https://pub.dev"
     source: hosted
-    version: "2.7.0"
+    version: "3.1.0"
   matcher:
     dependency: transitive
     description:

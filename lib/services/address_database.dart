@@ -2,7 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AddressDatabase {
   static const String countryKey = 'country';
-  static const String streetKey = 'street';
+  static const String streetKey = 'name';
 
   static Future<void> saveAddress(String country, String street) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

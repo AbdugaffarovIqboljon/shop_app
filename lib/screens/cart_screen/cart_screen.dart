@@ -88,7 +88,9 @@ class _CartScreenState extends State<_CartScreenContent> {
               await cartProvider.removeItems(
                 cartProvider.selectedProducts.first,
               );
+
               if (mounted) Navigator.of(context).pop();
+              setState(() {});
             },
           );
         },
