@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shop_app/library.dart';
 
 class BottomNavBar extends StatelessWidget {
   final void Function(int) onTap;
@@ -22,7 +21,8 @@ class BottomNavBar extends StatelessWidget {
           width: 21.sp,
         ),
         activeIcon: Image(
-          image: const AssetImage('assets/icons/tabbar/ic_house_chimney_fill.png'),
+          image:
+              const AssetImage('assets/icons/tabbar/ic_house_chimney_fill.png'),
           color: Colors.deepPurple.shade700,
           height: 21.sp,
           width: 21.sp,
@@ -37,7 +37,8 @@ class BottomNavBar extends StatelessWidget {
           width: 22.sp,
         ),
         activeIcon: Image(
-          image: const AssetImage('assets/icons/tabbar/ic_cart_shopping_fast_fill.png'),
+          image: const AssetImage(
+              'assets/icons/tabbar/ic_cart_shopping_fast_fill.png'),
           color: Colors.deepPurple.shade700,
           height: 22.sp,
           width: 22.sp,

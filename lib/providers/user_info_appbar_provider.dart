@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
-import '../services/user_database.dart';
+import '../data/services/database/user_database.dart';
 
 class UserInfoProvider extends ChangeNotifier {
   late StreamSubscription<Map<String, String>> _streamSubscription;

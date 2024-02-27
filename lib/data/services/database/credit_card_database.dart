@@ -1,4 +1,4 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/library.dart';
 
 class CardDatabase {
   static const String keyCardHolder = 'cardHolder';

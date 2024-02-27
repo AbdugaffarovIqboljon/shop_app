@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:shop_app/library.dart';
 
 abstract class BasicAppBar {
   static PreferredSizeWidget defaultAppBar(

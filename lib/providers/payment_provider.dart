@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/services/credit_card_database.dart';
+import 'package:shop_app/data/services/database/credit_card_database.dart';
 
 class PaymentProvider extends ChangeNotifier {
   bool _isEditButtonPressed = false;

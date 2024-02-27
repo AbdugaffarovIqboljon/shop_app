@@ -24,7 +24,6 @@ class UserInfoDatabase {
     await prefs.setString(_keyEmail, email);
 
     _userInfoController.add({'userId': userId, 'name': name, 'email': email});
-    print("USER ID : $userId");
   }
 
   static Future<Map<String, String>?> getUserInfo() async {

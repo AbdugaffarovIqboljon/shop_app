@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shop_app/screens/profile_screen/profile_screen_views/save_button.dart';
 
-import '../../services/user_database.dart';
+import '../../data/services/database/user_database.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -101,7 +101,5 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         newEmail.isNotEmpty ? newEmail : userInfo?['email'] ?? '';
 
     await UserInfoDatabase.saveUserInfo(name, email);
-
-    print('User Info Saved: $userInfo');
   }
 }

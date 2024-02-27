@@ -1,7 +1,4 @@
-import 'dart:convert';
-
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shop_app/model/product_model.dart';
+import 'package:shop_app/library.dart';
 
 class LocalDatabase {
   /// #Saved Products
@@ -56,7 +53,6 @@ class LocalDatabase {
   Future<List<ProductModel>> getSavedItems() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    // Retrieve the saved items as a List<Map<String, dynamic>>
     List<Map<String, dynamic>> savedItems = prefs
             .getStringList('item')
             ?.map((json) => jsonDecode(json))
@@ -64,7 +60,6 @@ class LocalDatabase {
             .toList() ??
         [];
 
-    // Convert each entry to a ProductModel
     List<ProductModel> products =
         savedItems.map((item) => ProductModel.fromJson(item)).toList();
 
@@ -83,36 +78,34 @@ class LocalDatabase {
   }
 
   /// #Liked Products
-  void saveLikedProducts(List<ProductModel> likedProducts) async {
+  Future<void> saveLikedProducts(List<ProductModel> likedProducts) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String> likedProductsJson =
-        likedProducts.map((product) => jsonEncode(product.toJson())).toList();
-    prefs.setStringList('likedProducts', likedProductsJson);
+
+    prefs.setStringList(
+      'likedProducts',
+      likedProducts.map((product) => jsonEncode(product.toJson())).toList(),
+    );
   }
 
   Future<List<ProductModel>> getLikedProducts() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String> likedProductsJson =
-        prefs.getStringList('likedProducts') ?? <String>[];
-    if (likedProductsJson.isNotEmpty) {
-      List<ProductModel> likedProducts = likedProductsJson
-          .map((json) => ProductModel.fromJson(jsonDecode(json)))
-          .toList();
 
-      return likedProducts;
-    } else {
-      return <ProductModel>[];
-    }
+    List<String> likedProductsJson = prefs.getStringList('likedProducts') ?? [];
+
+    List<ProductModel> likedProducts = likedProductsJson
+        .map((json) => ProductModel.fromJson(jsonDecode(json)))
+        .toList();
+
+    return likedProducts;
   }
 
   void removeLikedProduct(ProductModel product) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> likedProductsJson =
-        prefs.getStringList('likedProducts') ?? <String>[];
+
+    List<String> likedProductsJson = prefs.getStringList('likedProducts') ?? [];
 
     likedProductsJson.removeWhere(
-      (json) => ProductModel.fromJson(jsonDecode(json)).id == product.id,
-    );
+        (json) => ProductModel.fromJson(jsonDecode(json)).id == product.id);
 
     prefs.setStringList('likedProducts', likedProductsJson);
   }

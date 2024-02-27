@@ -6,7 +6,7 @@ import 'package:shop_app/providers/address_screen_provider.dart';
 import 'package:shop_app/screens/cart_screen/cart_screen_views/alert_dialog.dart';
 
 import '../../providers/cart_provider.dart';
-import '../../services/product_database.dart';
+import '../../data/services/database/product_database.dart';
 import 'cart_screen_views/cart_list_view.dart';
 import 'cart_screen_views/empty_cart_case.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../model/product_model.dart';
-import '../services/product_database.dart';
+import '../data/services/database/product_database.dart';
 
 class CartProvider extends ChangeNotifier {
   List<ProductModel> selectedProducts = [];

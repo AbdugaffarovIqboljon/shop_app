@@ -8,7 +8,7 @@ import 'package:shop_app/screens/profile_screen/profile_screen_views/build_credi
 import 'package:shop_app/screens/profile_screen/profile_screen_views/cart_inputs.dart';
 import 'package:shop_app/screens/profile_screen/profile_screen_views/save_button.dart';
 
-import '../../services/credit_card_database.dart';
+import '../../data/services/database/credit_card_database.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});

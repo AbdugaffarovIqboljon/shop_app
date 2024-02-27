@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/components/product_card.dart';
 import 'package:shop_app/providers/address_screen_provider.dart';
 import 'package:shop_app/providers/cart_provider.dart';
 import 'package:shop_app/providers/home_screen_provider.dart';
+import 'package:shop_app/providers/liked_products_provider.dart';
 import 'package:shop_app/providers/payment_provider.dart';
 import 'package:shop_app/providers/shop_detail_provider.dart';
 import 'package:shop_app/providers/special_offers_provider.dart';

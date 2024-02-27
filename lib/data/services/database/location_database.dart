@@ -1,4 +1,4 @@
-import 'package:geolocator/geolocator.dart';
+import 'package:shop_app/library.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class LocationService {

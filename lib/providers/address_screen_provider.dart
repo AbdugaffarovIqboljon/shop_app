@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:shop_app/services/address_database.dart';
+import 'package:shop_app/data/services/database/address_database.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class AddressProvider extends ChangeNotifier {

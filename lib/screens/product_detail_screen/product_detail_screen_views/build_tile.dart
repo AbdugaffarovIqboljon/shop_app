@@ -6,7 +6,7 @@ List<Widget> buildTitle(
   num rate,
   int count,
 ) {
-  return <Widget>[
+  return [
     const SizedBox(height: 10),
     Text(
       productName,

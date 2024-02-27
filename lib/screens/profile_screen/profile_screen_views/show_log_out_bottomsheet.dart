@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../services/user_database.dart';
+import '../../../data/services/database/user_database.dart';
 import 'log_out_button.dart';
 
 Future showLogoutBottomSheet({

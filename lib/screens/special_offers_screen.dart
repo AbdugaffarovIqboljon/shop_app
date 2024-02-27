@@ -5,7 +5,7 @@ import 'package:shop_app/components/app_bar.dart';
 import 'package:shop_app/components/special_offer_widget.dart';
 import 'package:shop_app/providers/special_offers_provider.dart';
 
-import '../product_detail_screen/detail_screen.dart';
+import 'product_detail_screen/detail_screen.dart';
 
 class SpecialOfferScreen extends StatelessWidget {
   const SpecialOfferScreen({super.key});

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/data/network_service.dart';
 import 'package:shop_app/model/product_model.dart';
 import 'package:shop_app/model/special_offer.dart';
-import 'package:shop_app/screens/special_offers_screen/special_offers_screen.dart';
+import 'package:shop_app/screens/special_offers_screen.dart';
 
 class SpecialOffersProvider extends ChangeNotifier {
   final NetworkService productService = NetworkService();

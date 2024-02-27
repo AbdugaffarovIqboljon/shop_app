@@ -1,9 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:shop_app/model/product_model.dart';
-import 'package:shop_app/services/product_database.dart';
+import 'package:shop_app/library.dart';
 
 class ProductCard extends StatefulWidget {
   final BorderRadius borderRadius;
@@ -47,7 +43,6 @@ class _ProductCardState extends State<ProductCard> {
                   child: IconButton(
                     onPressed: () {
                       likedProductsProvider.toggleLike(widget.product);
-                      print("TOGGLE LIKED: $isLiked");
                     },
                     icon: Image.asset(
                       'assets/icons/${isLiked ? 'bold' : 'light'}/heart@2x.png',
@@ -160,21 +155,5 @@ class _ProductCardState extends State<ProductCard> {
         );
       },
     );
-  }
-}
-
-class LikedProductsProvider extends ChangeNotifier {
-  List<ProductModel> likedProducts = [];
-  LocalDatabase localDatabase = LocalDatabase();
-
-  void toggleLike(ProductModel product) {
-    if (likedProducts.contains(product)) {
-      likedProducts.remove(product);
-      localDatabase.removeLikedProduct(product);
-    } else {
-      likedProducts.add(product);
-      localDatabase.saveLikedProducts(likedProducts);
-    }
-    notifyListeners();
   }
 }
