@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ByCategoriesTitle extends StatelessWidget {
-  const ByCategoriesTitle({
-    Key? key,
-  }) : super(key: key);
+  const ByCategoriesTitle({super.key});
 
   @override
   Widget build(BuildContext context) {

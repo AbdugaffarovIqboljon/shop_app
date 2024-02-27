@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../data/services/database/user_database.dart';
 
 class ProfileHeader extends StatefulWidget {
-  const ProfileHeader({Key? key}) : super(key: key);
+  const ProfileHeader({super.key});
 
   @override
   State<ProfileHeader> createState() => _ProfileHeaderState();
