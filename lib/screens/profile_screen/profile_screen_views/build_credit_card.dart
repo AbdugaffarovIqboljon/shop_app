@@ -19,8 +19,8 @@ class ShowCreditCard extends StatelessWidget {
       children: [
         ClipRRect(
           clipBehavior: Clip.antiAlias,
-          borderRadius: const BorderRadius.all(
-            Radius.circular(25),
+          borderRadius: BorderRadius.all(
+            Radius.circular(23.r),
           ),
           child: Image(
             image: const AssetImage(
@@ -29,15 +29,16 @@ class ShowCreditCard extends StatelessWidget {
             height: 215.sp,
           ),
         ),
-        Transform.translate(
-          offset: Offset(340.sp, -6.sp),
+        Positioned(
+          left: 345.w,
+          top: 1.h,
           child: Row(
             children: [
               IconButton(
                 onPressed: onPressed,
                 icon: Image(
-                  height: 25.sp,
-                  width: 25.sp,
+                  height: 25.h,
+                  width: 25.w,
                   color: Colors.white,
                   image: const AssetImage(
                     "assets/icons/profile/edit.png",
@@ -48,25 +49,25 @@ class ShowCreditCard extends StatelessWidget {
           ),
         ),
         Positioned(
-          height: 110,
-          left: 25,
+          height: 125.h,
+          left: 25.w,
           child: Row(
             children: [
               Image(
-                height: 55.sp,
-                width: 55.sp,
+                height: 55.h,
+                width: 55.w,
                 image: const AssetImage("assets/images/img_chip.png"),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10.w),
               Image(
-                height: 33.sp,
-                width: 33.sp,
+                height: 33.h,
+                width: 33.w,
                 color: Colors.white,
                 image: const AssetImage(
                   "assets/icons/profile/nfc.png",
                 ),
               ),
-              SizedBox(width: 110.sp),
+              SizedBox(width: 110.w),
               Text(
                 'Credit Card',
                 style: TextStyle(
@@ -80,8 +81,8 @@ class ShowCreditCard extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: 105,
-          left: 20,
+          top: 105.h,
+          left: 20.w,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -90,12 +91,12 @@ class ShowCreditCard extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.w900,
                   color: Colors.white,
-                  fontSize: 24.sp,
-                  wordSpacing: 2.45,
-                  letterSpacing: 6,
+                  fontSize: 23.sp,
+                  wordSpacing: 2.45.w,
+                  letterSpacing: 6.w,
                 ),
               ),
-              const SizedBox(height: 15),
+              SizedBox(height: 12.w),
               Text(
                 cardHolderName,
                 style: TextStyle(

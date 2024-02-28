@@ -71,7 +71,7 @@ class _SpecialOfferWidgetState extends State<SpecialOfferWidget> {
             alignment: const Alignment(0.6, 0),
             child: CachedNetworkImage(
               imageUrl: widget.productModel.image,
-              height: 160.sp,
+              height: 160.h,
             ),
           ),
         ),

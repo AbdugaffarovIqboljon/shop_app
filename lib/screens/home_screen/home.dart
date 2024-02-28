@@ -56,14 +56,14 @@ class _HomeScreenState extends State<HomeScreen> {
               flexibleSpace: HomeAppBar(),
             ),
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+              padding: EdgeInsets.fromLTRB(15.w, 10.h, 15.w, 0),
               sliver: SliverList(
                 delegate: SliverChildListDelegate(
                   [
                     const SpecialOffers(),
-                    SizedBox(height: 35.sp),
+                    SizedBox(height: 20.h),
                     const ByCategoriesTitle(),
-                    const SizedBox(height: 15),
+                    SizedBox(height: 15.h),
                     ByCategoriesWidget(
                       onCategorySelected: (index) {
                         final provider = Provider.of<HomeScreenProvider>(
@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
               sliver: SliverGrid(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,

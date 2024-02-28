@@ -11,7 +11,10 @@ List<Widget> buildTitle(
     Text(
       productName,
       maxLines: 3,
-      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 23.sp,
+      ),
     ),
     const SizedBox(height: 30),
     Row(

@@ -16,6 +16,7 @@ Widget buildOption(
   void Function() onTap,
 ) {
   return ListTile(
+    splashColor: Colors.transparent,
     leading: Image.asset(data.icon, scale: 2),
     title: Text(
       data.title,

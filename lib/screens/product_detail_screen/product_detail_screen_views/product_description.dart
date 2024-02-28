@@ -25,8 +25,8 @@ List<Widget> buildDescription(String description) {
         fontSize: 17.sp,
         fontWeight: FontWeight.w500,
       ),
-      linkStyle: const TextStyle(
-        fontSize: 19,
+      linkStyle: TextStyle(
+        fontSize: 19.sp,
         color: Color(0xFF424242),
         fontWeight: FontWeight.bold,
       ),

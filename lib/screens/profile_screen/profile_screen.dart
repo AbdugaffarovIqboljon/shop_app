@@ -26,9 +26,7 @@ class ProfileOption {
     this.onClick,
     this.titleColor = const Color(0xFF212121),
     this.trailing = const Image(
-      image: AssetImage(
-        'assets/icons/profile/arrow_right@2x.png',
-      ),
+      image: AssetImage('assets/icons/profile/arrow_right@2x.png'),
       width: 24,
       height: 24,
     ),
@@ -94,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SliverList(
             delegate: SliverChildListDelegate.fixed([
               Padding(
-                padding: EdgeInsets.only(top: 30.sp, bottom: 10.sp),
+                padding: EdgeInsets.only(top: 30.h, bottom: 10.h),
                 child: const ProfileHeader(),
               ),
             ]),

@@ -10,7 +10,7 @@ void showDelayedDialog(BuildContext context) {
       return AlertDialog(
         backgroundColor: Colors.white,
         contentPadding:
-        const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+        EdgeInsets.symmetric(vertical: 5.h, horizontal: 5.w),
         elevation: 0,
         title: Text(
           "Successfully added to your cart",

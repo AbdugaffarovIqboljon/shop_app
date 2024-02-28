@@ -49,22 +49,22 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                                 .contains(product);
                             return Column(
                               children: [
-                                SizedBox(height: 50.sp),
+                                SizedBox(height: 50.h),
                                 Align(
-                                  alignment: Alignment(0.95.sp, 0),
+                                  alignment: const Alignment(0.95, 0),
                                   child: IconButton(
                                     onPressed: () {
                                       likedProductsProvider.toggleLike(product);
                                     },
                                     icon: Image.asset(
                                       'assets/icons/${isLiked ? 'bold' : 'light'}/heart@2x.png',
-                                      height: 35.sp,
+                                      height: 35.h,
                                     ),
                                   ),
                                 ),
                                 Image(
-                                  height: 300.sp,
-                                  width: 350.sp,
+                                  height: 300.h,
+                                  width: 350.w,
                                   image: NetworkImage(product.image),
                                 ),
                                 Padding(

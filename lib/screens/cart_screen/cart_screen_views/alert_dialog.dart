@@ -21,7 +21,7 @@ void showAlertDialog(
           mainAxisSize: MainAxisSize.min,
           children: [
             Lottie.asset("assets/lotties/delivery_lottie.json"),
-            SizedBox(height: 30.sp),
+            SizedBox(height: 30.h),
             Text(
               "Your order will be delivered in 1-2 days to your address: ${removeBrackets(addressProvider.country)}, ${removeBrackets(addressProvider.street)}",
               style: TextStyle(

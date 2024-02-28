@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Widget addToCartButton(double price, void Function() onTap) {
   buildAddCard() => Container(
-        height: 58.sp,
-        width: 160.sp,
+        height: 58.h,
+        width: 160.w,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(30)),
           color: Colors.deepPurpleAccent.shade700,
@@ -19,18 +19,18 @@ Widget addToCartButton(double price, void Function() onTap) {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: const BorderRadius.all(Radius.circular(29)),
+            borderRadius: BorderRadius.all(Radius.circular(28.r)),
             onTap: onTap,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset('assets/icons/detail/bag@2x.png', scale: 2),
-                const SizedBox(width: 16),
-                const Text(
+                SizedBox(width: 16.w),
+                Text(
                   'Add to Cart',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     color: Colors.white,
                   ),
                 ),
@@ -77,7 +77,7 @@ Widget addToCartButton(double price, void Function() onTap) {
               buildAddCard()
             ],
           ),
-          const SizedBox(height: 36),
+          SizedBox(height: 35.h),
         ],
       ),
     ),

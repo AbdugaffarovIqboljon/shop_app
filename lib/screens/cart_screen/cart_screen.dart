@@ -5,8 +5,8 @@ import 'package:shop_app/model/product_model.dart';
 import 'package:shop_app/providers/address_screen_provider.dart';
 import 'package:shop_app/screens/cart_screen/cart_screen_views/alert_dialog.dart';
 
-import '../../providers/cart_provider.dart';
 import '../../data/services/database/product_database.dart';
+import '../../providers/cart_provider.dart';
 import 'cart_screen_views/cart_list_view.dart';
 import 'cart_screen_views/empty_cart_case.dart';
 
@@ -48,12 +48,7 @@ class _CartScreenState extends State<_CartScreenContent> {
         future: localDatabase.getSavedItems(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            print("ERROR: ${snapshot.error}");
             return const Text("Some Error has gone \nTry Again later:(");
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator.adaptive(),
-            );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return buildEmptyCart();
           } else {
@@ -86,7 +81,7 @@ class _CartScreenState extends State<_CartScreenContent> {
             AddressProvider(),
             () async {
               await cartProvider.removeItems(
-                cartProvider.selectedProducts.first,
+                cartProvider.selectedProducts[0],
               );
 
               if (mounted) Navigator.of(context).pop();

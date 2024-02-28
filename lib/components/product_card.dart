@@ -28,9 +28,10 @@ class _ProductCardState extends State<ProductCard> {
         bool isLiked =
             likedProductsProvider.likedProducts.contains(widget.product);
         return InkWell(
+          borderRadius: widget.borderRadius,
           onTap: widget.onTap,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            padding: EdgeInsets.symmetric(horizontal: 12.0.w),
             decoration: BoxDecoration(
               borderRadius: widget.borderRadius,
               border: Border.all(color: Colors.black12),
@@ -46,17 +47,17 @@ class _ProductCardState extends State<ProductCard> {
                     },
                     icon: Image.asset(
                       'assets/icons/${isLiked ? 'bold' : 'light'}/heart@2x.png',
-                      height: 28.sp,
+                      height: 28.h,
                     ),
                   ),
                 ),
                 Center(
                   child: Image.network(
                     widget.product.image,
-                    height: 160.sp,
+                    height: 160.h,
                   ),
                 ),
-                SizedBox(height: 20.sp),
+                SizedBox(height: 20.h),
                 Text(
                   widget.product.title,
                   style: TextStyle(
@@ -66,7 +67,7 @@ class _ProductCardState extends State<ProductCard> {
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 15.sp),
+                SizedBox(height: 15.h),
                 Row(
                   children: [
                     Icon(
@@ -106,7 +107,7 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                   ],
                 ),
-                SizedBox(height: 8.sp),
+                SizedBox(height: 8.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
