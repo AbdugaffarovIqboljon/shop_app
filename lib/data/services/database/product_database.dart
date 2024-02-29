@@ -60,8 +60,7 @@ class LocalDatabase {
             .toList() ??
         [];
 
-    List<ProductModel> products =
-        savedItems.map((item) => ProductModel.fromJson(item)).toList();
+    List<ProductModel> products = savedItems.map((item) => ProductModel.fromJson(item)).toList();
 
     return products;
   }

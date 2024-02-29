@@ -38,7 +38,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
                         ),
                       );
                     } else if (!snapshot.hasData || snapshot.data == null) {
-                      return buildSkeletonDetail();
+                      return SkeletonProductDetail();
                     } else {
                       final product = snapshot.data!;
                       return SingleChildScrollView(

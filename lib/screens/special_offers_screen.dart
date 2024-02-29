@@ -20,7 +20,7 @@ class SpecialOfferScreen extends StatelessWidget {
         title: 'Special Offers',
       ),
       body: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 35),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
         itemBuilder: (context, index) {
           final data = provider.specials[index];
           final product = provider.productList[index];

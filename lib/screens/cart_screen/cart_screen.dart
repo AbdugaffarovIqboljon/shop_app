@@ -45,12 +45,16 @@ class _CartScreenState extends State<_CartScreenContent> {
         centerTitle: true,
       ),
       body: FutureBuilder<List<ProductModel>>(
-        future: localDatabase.getSavedItems(),
+        future: CartProvider().getSavedItems(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const Text("Some Error has gone \nTry Again later:(");
+            return const Text("Some error has gone \nTry Again later :(");
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return buildEmptyCart();
+            return const BuildEmptyCartCase();
           } else {
             List<ProductModel> products = snapshot.data!;
             return buildListView(

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-import '../model/product_model.dart';
 import '../data/services/database/product_database.dart';
+import '../model/product_model.dart';
 
 class CartProvider extends ChangeNotifier {
   List<ProductModel> selectedProducts = [];
@@ -19,5 +19,11 @@ class CartProvider extends ChangeNotifier {
   Future<void> removeItems(ProductModel product) async {
     localDatabase.removeItem(product);
     notifyListeners();
+  }
+
+  Future<List<ProductModel>> getSavedItems() async {
+    return await Future.delayed(const Duration(milliseconds: 380)).then(
+      (value) => localDatabase.getSavedItems(),
+    );
   }
 }
