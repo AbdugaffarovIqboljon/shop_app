@@ -16,8 +16,11 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> removeItems(ProductModel product) async {
-    localDatabase.removeItem(product);
+  Future<void> removeItems(List<ProductModel> selectedProducts) async {
+    for (final product in selectedProducts) {
+      localDatabase.removeItem(product);
+    }
+    selectedProducts.clear();
     notifyListeners();
   }
 

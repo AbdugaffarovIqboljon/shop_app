@@ -57,16 +57,18 @@ class _CartScreenState extends State<_CartScreenContent> {
             return const BuildEmptyCartCase();
           } else {
             List<ProductModel> products = snapshot.data!;
-            return buildListView(
-              context,
-              products,
-              (ProductModel product) async {
-                final cartProvider = Provider.of<CartProvider>(
-                  context,
-                  listen: false,
-                );
-                await cartProvider.removeItems(product);
-                setState(() {});
+            return CartListView(
+              products: products,
+              onPressed: (ProductModel product) async {
+                final cartProvider =
+                    Provider.of<CartProvider>(context, listen: false);
+                cartProvider.toggleProductSelection(product: product);
+                if (cartProvider.selectedProducts.isNotEmpty) {
+                  cartProvider.removeItems(
+                    List.from(cartProvider.selectedProducts),
+                  );
+                  setState(() {});
+                }
               },
             );
           }
@@ -74,22 +76,22 @@ class _CartScreenState extends State<_CartScreenContent> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.deepPurpleAccent,
-        onPressed: () {
-          final cartProvider = Provider.of<CartProvider>(
-            context,
-            listen: false,
-          );
-          if (cartProvider.selectedProducts.isEmpty) return;
+        onPressed: () async {
+          final cartProvider =
+              Provider.of<CartProvider>(context, listen: false);
           showAlertDialog(
             context,
             AddressProvider(),
             () async {
-              await cartProvider.removeItems(
-                cartProvider.selectedProducts[0],
-              );
-
-              if (mounted) Navigator.of(context).pop();
+              if (cartProvider.selectedProducts.isNotEmpty) {
+                await cartProvider.removeItems(
+                  List.from(
+                    cartProvider.selectedProducts,
+                  ),
+                );
+              }
               setState(() {});
+              if (mounted) Navigator.pop(context);
             },
           );
         },
